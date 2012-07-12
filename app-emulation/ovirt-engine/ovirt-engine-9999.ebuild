@@ -146,12 +146,14 @@ __EOF__
 	# the following should move
 	# from make to spec
 	# for now just remove them
+	# postgres was installed at lib of ear
 	rm -fr \
 		"${ED}/etc/tmpfiles.d" \
 		"${ED}/etc/rc.d" \
 		"${ED}/etc/sysconfig" \
 		"${ED}/var" \
-		"${ED}/lib/systemd"
+		"${ED}/lib/systemd" \
+		"${ED}/usr/share/ovirt-engine/modules/org/postgresql"
 
 	fowners ovirt:ovirt -R /etc/ovirt-engine
 	fowners ovirt:ovirt -R /etc/pki/ovirt-engine
