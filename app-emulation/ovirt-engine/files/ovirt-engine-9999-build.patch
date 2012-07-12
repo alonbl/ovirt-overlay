@@ -1,0 +1,277 @@
+From 8e5f9bbbaa62e3b8b592a151d96b25b7a2d33928 Mon Sep 17 00:00:00 2001
+From: Alon Bar-Lev <alonbl@redhat.com>
+Date: Wed, 11 Jul 2012 20:37:05 +0300
+Subject: [PATCH] build: use maven deploy and move jar handling to Makefile
+
+Currently Makefile copies intermediate files from maven
+build directory, while maven is at the middle of generating
+artifacts.
+
+Currently Makefile does not produce workable image as spec
+file is the one that installing the jars, it is very difficult
+to pack make output and make then work on other environment.
+
+This change does the following:
+1. Uses the deploy output of maven to collect artifacts.
+2. Remove the brew specific fixups.
+3. Move the pom and jar installation from spec to Makefile.
+4. Use 'find' to locate artifacts to support both brew and standard
+   environments.
+
+NOTES
+
+The following poms were specified in spec but not produced
+by maven deploy: restapi-interface.pom, manager-beans.pom.
+
+The spec file produced parent.pom out of '.', while maven
+deploy produces root.pom, the maven variant is used.
+
+TESTED
+
+make rpm - works, with the exception of the above notes.
+
+Change-Id: I9eb8b8f60f2be71b2054582b5e898ae996f324ac
+Signed-off-by: Alon Bar-Lev <alonbl@redhat.com>
+---
+ Makefile                                   |   84 +++++++++++++++------------
+ packaging/fedora/spec/ovirt-engine.spec.in |   55 ++++--------------
+ 2 files changed, 58 insertions(+), 81 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index b265c51..628e5a6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -24,7 +24,9 @@
+ MVN=$(shell which mvn)
+ EXTRA_BUILD_FLAGS=
+ BUILD_FLAGS=-P gwt-admin,gwt-user
+-DEPLOY_FLAGS=-f deploy.xml
++mavenpomdir=/usr/share/maven-poms
++javadir=/usr/share/java
++
+ EAR_DIR=/usr/share/ovirt-engine/engine.ear
+ EAR_SRC_DIR=ear/target/engine
+ PY_SITE_PKGS:=$(shell python -c "from distutils.sysconfig import get_python_lib as f;print f()")
+@@ -45,37 +47,49 @@ OUTPUT_DIR=$(shell bash -c "pwd -P")/output
+ TARBALL=ovirt-engine-$(RPM_VERSION).tar.gz
+ SRPM=$(OUTPUT_DIR)/ovirt-engine-$(RPM_VERSION)*.src.rpm
+ ARCH=noarch
+-BUILD_FILE=$(shell bash -c "pwd -P")/build_mvn
+-SOURCE_DIR=$(RPMBUILD)/SOURCES
+-
+-CURR_DIR=$(shell bach -c "pwd -P")
+-all: build_mvn
+-
+-build_mvn:
++BUILD_FILE=tmp.built
++MAVEN_OUTPUT_DIR_DEFAULT=$(shell pwd -P)/tmp.repos
++MAVEN_OUTPUT_DIR=$(MAVEN_OUTPUT_DIR_DEFAULT)
++
++ARTIFACTS = \
++	backend bll common compat dal \
++	engine-config engine-notifier engine-notifier-resources \
++	engine-notifier-service engine-tools-common \
++	engineencryptutils \
++	genericapi \
++	interface-common-jaxrs \
++	manager manager-modules manager-tools \
++	restapi-definition restapi-jaxrs restapi-parent restapi-types \
++	root scheduler searchbackend utils \
++	vdsbroker
++
++all: $(BUILD_FILE)
++
++$(BUILD_FILE):
+ 	export MAVEN_OPTS="${MAVEN_OPTS} -XX:MaxPermSize=512m"
+-	$(MVN) install $(BUILD_FLAGS) $(EXTRA_BUILD_FLAGS) -D skipTests
++	$(MVN) \
++		$(BUILD_FLAGS) \
++		$(EXTRA_BUILD_FLAGS) \
++		-D skipTests \
++		-D altDeploymentRepository=install::default::file://$(MAVEN_OUTPUT_DIR) \
++		deploy
+ 	touch $(BUILD_FILE)
+ 
+ clean:
+ 	$(MVN) clean $(EXTRA_BUILD_FLAGS)
+ 	rm -rf $(RPMBUILD) $(SPEC_FILE) $(OUTPUT_DIR) $(SRCRPMBUILD) $(BUILD_FILE)
++	[ "$(MAVEN_OUTPUT_DIR_DEFAULT)" = "$(MAVEN_OUTPUT_DIR)" ] && rm -fr "$(MAVEN_OUTPUT_DIR)"
+ 
+ test:
+ 	$(MVN) install $(BUILD_FLAGS) $(EXTRA_BUILD_FLAGS)
+ 
+ install: \
+-	build_mvn \
+-	pre_copy \
+-	create_dirs \
+-	install_ear \
+-	common_install
++	all \
++	install_without_maven
+ 
+ install_without_maven: \
+ 	create_dirs \
+-	install_brew_ear \
+-	common_install
+-
+-common_install: \
++	install_artifacts \
+ 	install_config \
+ 	install_sysprep \
+ 	install_notification_service \
+@@ -87,18 +101,6 @@ common_install: \
+ 	install_jboss_modules \
+ 	install_service
+ 
+-# Brew compatibility hack
+-# We want both env (local and brew) to work the same
+-pre_copy:
+-	echo $(SOURCE_DIR)
+-	cp -f ./backend/manager/tools/engine-tools-common/target/engine-tools-common-$(APP_VERSION).jar $(SOURCE_DIR)/
+-	cp -f ./backend/manager/tools/engine-config/target/engine-config-$(APP_VERSION).jar $(SOURCE_DIR)/
+-	cp -f ./backend/manager/modules/engineencryptutils/target/engineencryptutils-$(APP_VERSION).jar $(SOURCE_DIR)/
+-	cp -f ./backend/manager/modules/compat/target/compat-$(APP_VERSION).jar $(SOURCE_DIR)/
+-	cp -f ./backend/manager/tools/engine-notifier/engine-notifier-service/target/engine-notifier-service-$(APP_VERSION).jar $(SOURCE_DIR)/
+-	mkdir -p $(SOURCE_DIR)/ear
+-	cp -rf $(EAR_SRC_DIR)/* $(SOURCE_DIR)/ear/
+-
+ tarball: $(TARBALL)
+ $(TARBALL):
+ 	tar zcf $(TARBALL) `git ls-files`
+@@ -154,15 +156,23 @@ create_dirs:
+ 	@install -dm 755 $(PREFIX)/var/cache/ovirt-engine
+ 	@install -dm 755 $(PREFIX)/usr/lib/systemd/system
+ 
+-install_ear:
+-	@echo "*** Deploying EAR to $(PREFIX)"
+-	install -dm 755 $(PREFIX)$(EAR_DIR)
+-	cp -rf $(SOURCE_DIR)/ear/* $(PREFIX)$(EAR_DIR)
+-
+-install_brew_ear:
++install_artifacts:
+ 	@echo "*** Deploying EAR to $(PREFIX)"
+ 	install -dm 755 $(PREFIX)$(EAR_DIR)
+-	unzip $(SOURCE_DIR)/*.ear -d $(PREFIX)$(EAR_DIR)
++	X=`find "$(MAVEN_OUTPUT_DIR)" -name engine-server-ear-$(APP_VERSION).ear` && unzip "$$X" -d "$(PREFIX)$(EAR_DIR)"
++
++	install -dm 755 $(PREFIX)$(javadir)/ovirt-engine
++	install -dm 755 $(PREFIX)$(mavenpomdir)
++	for artifact_id in  $(ARTIFACTS); do \
++		POM=`find "$(MAVEN_OUTPUT_DIR)" -name "$$artifact_id-$(APP_VERSION).pom"`; \
++		if ! [ -f "$$POM" ]; then \
++			echo "ERROR: Cannot find artifact $$artifact_id"; \
++			exit 1; \
++		fi; \
++		JAR=`echo $$POM | sed 's/\.pom/.jar/'`; \
++		install -p -m 644 "$$POM" $(PREFIX)$(mavenpomdir)/JPP.ovirt-engine-$$artifact_id.pom; \
++		[ -f "$$JAR" ] && install -p -m 644 "$$POM" $(PREFIX)$(javadir)/ovirt-engine/$$artifact_id.jar; \
++	done
+ 
+ install_setup:
+ 	@echo "*** Deploying setup executables"
+diff --git a/packaging/fedora/spec/ovirt-engine.spec.in b/packaging/fedora/spec/ovirt-engine.spec.in
+index 998105e..6c5061e 100644
+--- a/packaging/fedora/spec/ovirt-engine.spec.in
++++ b/packaging/fedora/spec/ovirt-engine.spec.in
+@@ -302,63 +302,32 @@ All-in-one plugin for oVirt Engine's setup
+ 
+ %build
+ 
+-make PREFIX=%{buildroot} SOURCE_DIR=%{_sourcedir} build_mvn
+-
++make PREFIX=%{buildroot} javadir=%{_javadir} mavenpomdir=%{_mavenpomdir}
+ 
+ %install
+ 
+ # Use the makefile to do the normal installation, after that we
+ # will need to replace jar files with links to their actual
+ # locations:
+-make PREFIX=%{buildroot} SOURCE_DIR=%{_sourcedir} install
++make PREFIX=%{buildroot} javadir=%{_javadir} mavenpomdir=%{_mavenpomdir} install
+ 
+ # Create the directories required for jar and POM files:
+ install -d -m 755 %{buildroot}%{engine_jar}
+ install -d -m 755 %{buildroot}%{_mavenpomdir}
+ install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
+ 
+-# Jar and POM files:
+-while read module_path artifact_id
++# Register poms
++for pom in %{buildroot}%{_mavenpomdir}/*.pom
+ do
+-  pom_file="${module_path}/pom.xml"
+-  jar_file="${module_path}/target/${artifact_id}-%{version}.jar"
+-  install -p -m 644 ${pom_file} %{buildroot}%{_mavenpomdir}/JPP.%{name}-${artifact_id}.pom
+-  if [ -f "${jar_file}" ]
++  pom=`basename "${pom}"`
++  artifact_id=`echo "${pom}" | sed -e 's/JPP.%{name}-//' -e 's/\.pom//'`
++  if [ -f "%{buildroot}%{engine_jar}/${artifact_id}.jar" ]
+   then
+-    install -p -m 644 ${jar_file} %{buildroot}%{engine_jar}/${artifact_id}.jar
+-    %add_maven_depmap JPP.%{name}-${artifact_id}.pom %{name}/${artifact_id}.jar
++    %add_maven_depmap "${pom}" "%{name}/${artifact_id}.jar"
+   else
+-    %add_maven_depmap JPP.%{name}-${artifact_id}.pom
++    %add_maven_depmap "${pom}"
+   fi
+-done <<'.'
+-. parent
+-backend backend
+-backend/manager manager
+-backend/manager/modules manager-modules
+-backend/manager/modules/compat compat
+-backend/manager/modules/engineencryptutils engineencryptutils
+-backend/manager/modules/common common
+-backend/manager/modules/utils utils
+-backend/manager/modules/dal dal
+-backend/manager/modules/vdsbroker vdsbroker
+-backend/manager/modules/searchbackend searchbackend
+-backend/manager/modules/beans manager-beans
+-backend/manager/modules/beans/scheduler scheduler
+-backend/manager/modules/bll bll
+-backend/manager/modules/restapi restapi-parent
+-backend/manager/modules/restapi/interface restapi-interface
+-backend/manager/modules/restapi/interface/definition restapi-definition
+-backend/manager/modules/restapi/interface/common/jaxrs interface-common-jaxrs
+-backend/manager/modules/restapi/types restapi-types
+-backend/manager/modules/restapi/jaxrs restapi-jaxrs
+-backend/manager/tools manager-tools
+-backend/manager/tools/engine-tools-common engine-tools-common
+-backend/manager/tools/engine-config engine-config
+-backend/manager/tools/engine-notifier engine-notifier
+-backend/manager/tools/engine-notifier/engine-notifier-service engine-notifier-service
+-backend/manager/tools/engine-notifier/engine-notifier-resources engine-notifier-resources
+-frontend/api/genericapi genericapi
+-.
++done
+ 
+ # Replace jar files in the ear with links to their actuals
+ # locations, first for jar files from this package, as for these
+@@ -607,7 +576,7 @@ fi
+ 
+ # POM files:
+ %{_mavendepmapfragdir}/%{name}
+-%{_mavenpomdir}/JPP.%{name}-parent.pom
++%{_mavenpomdir}/JPP.%{name}-root.pom
+ %{_mavenpomdir}/JPP.%{name}-common.pom
+ %{_mavenpomdir}/JPP.%{name}-compat.pom
+ %{_mavenpomdir}/JPP.%{name}-utils.pom
+@@ -630,7 +599,6 @@ fi
+ # POM files:
+ %{_mavenpomdir}/JPP.%{name}-backend.pom
+ %{_mavenpomdir}/JPP.%{name}-manager.pom
+-%{_mavenpomdir}/JPP.%{name}-manager-beans.pom
+ %{_mavenpomdir}/JPP.%{name}-manager-modules.pom
+ %{_mavenpomdir}/JPP.%{name}-manager-tools.pom
+ %{_mavenpomdir}/JPP.%{name}-bll.pom
+@@ -736,7 +704,6 @@ fi
+ # POM files:
+ %{_mavenpomdir}/JPP.%{name}-interface-common-jaxrs.pom
+ %{_mavenpomdir}/JPP.%{name}-restapi-definition.pom
+-%{_mavenpomdir}/JPP.%{name}-restapi-interface.pom
+ %{_mavenpomdir}/JPP.%{name}-restapi-jaxrs.pom
+ %{_mavenpomdir}/JPP.%{name}-restapi-parent.pom
+ %{_mavenpomdir}/JPP.%{name}-restapi-types.pom
+-- 
+1.7.8.6
+
