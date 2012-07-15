@@ -60,26 +60,26 @@ RDEPEND=">=virtual/jre-1.7
 	${JARS}"
 
 pkg_setup() {
-	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
-		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
-
-	# TODO: we should be able to disable pom install
-	MAVEN_MAKE_COMMON=" \
-		mavenpomdir=/tmp \
-		javadir=/usr/share/${PN}/java \
-		MVN=mvn-${MAVEN_SLOT} \
-		$(use minimal && echo EXTRA_BUILD_FLAGS="-Dgwt.userAgent=gecko1_8")"
-
 	python_set_active_version 2
 	python_pkg_setup
 	java-pkg-2_pkg_setup
 
 	enewgroup ovirt
 	enewuser ovirt -1 "" "" ovirt,postgres
-}
 
-src_prepare() {
-	epatch "${FILESDIR}/${P}-build.patch"
+	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
+		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
+
+	# TODO: we should be able to disable pom install
+	MAVEN_MAKE_COMMON=" \
+		MVN=mvn-${MAVEN_SLOT} \
+		PYTHON=$(PYTHON --absolute-path) \
+		PYTHON_DIR=$(python_get_sitedir) \
+		PREFIX=/usr \
+		SYSCONF_DIR=/etc \
+		MAVENPOM_DIR=/tmp \
+		JAVA_DIR=/usr/share/${PN}/java \
+		$(use minimal && echo EXTRA_BUILD_FLAGS="-Dgwt.userAgent=gecko1_8")"
 }
 
 src_compile() {
@@ -92,7 +92,7 @@ src_compile() {
 src_install() {
 	emake -j1 \
 		${MAVEN_MAKE_COMMON} \
-		PREFIX="${ED}" \
+		DESTDIR="${ED}" \
 		install \
 		|| die
 
@@ -159,8 +159,8 @@ __EOF__
 	fowners ovirt:ovirt -R /etc/pki/ovirt-engine
 
 	diropts -o ovirt -g ovirt
-	keepdir /var/log/ovirt-engine
-	keepdir /var/lib/ovirt-engine
+	keepdir /var/log/ovirt-engine/{notifier,engine-manage-domains}
+	keepdir /var/lib/ovirt-engine/{deployments,content}
 	keepdir /var/cache/ovirt-engine
 	keepdir /var/lock/ovirt-engine
 

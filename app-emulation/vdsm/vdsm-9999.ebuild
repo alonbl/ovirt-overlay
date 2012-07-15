@@ -66,7 +66,7 @@ src_prepare() {
 }
 
 src_configure() {
-	econf PYTHON=/usr/bin/${EPYTHON}
+	econf PYTHON=$(PYTHON --absolute-path)
 }
 
 src_test() {
