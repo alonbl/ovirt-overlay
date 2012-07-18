@@ -151,9 +151,8 @@ __EOF__
 		"${ED}/etc/tmpfiles.d" \
 		"${ED}/etc/rc.d" \
 		"${ED}/etc/sysconfig" \
-		"${ED}/var" \
 		"${ED}/lib/systemd" \
-		"${ED}/usr/share/ovirt-engine/modules/org/postgresql"
+		"${ED}/usr/share/ovirt-engine/modules"
 
 	fowners ovirt:ovirt -R /etc/ovirt-engine
 	fowners ovirt:ovirt -R /etc/pki/ovirt-engine
