@@ -17,10 +17,10 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="
-	app-admin/sanlock
+	app-admin/sanlock[python]
 	app-admin/sudo
 	app-arch/tar
-	app-emulation/libvirt[python]
+	>=app-emulation/libvirt-0.10.2[python]
 	app-emulation/qemu-kvm
 	dev-libs/openssl
 	dev-python/cherrypy
@@ -30,7 +30,6 @@ RDEPEND="
 	dev-python/python-ethtool
 	net-fs/nfs-utils
 	net-misc/bridge-utils
-	net-misc/ipcalc
 	net-misc/rsync
 	net-misc/wget
 	sys-apps/dmidecode
