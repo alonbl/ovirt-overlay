@@ -21,7 +21,7 @@ RDEPEND="
 	app-admin/sudo
 	app-arch/tar
 	>=app-emulation/libvirt-0.10.2[python]
-	app-emulation/qemu-kvm
+	app-emulation/qemu
 	dev-libs/openssl
 	dev-python/cherrypy
 	dev-python/nose
