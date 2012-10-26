@@ -15,7 +15,7 @@ EGIT_REPO_URI="git://git.engineering.redhat.com/users/abarlev/${PN}.git"
 LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="-*"
-IUSE=""
+IUSE="java-sdk"
 
 RDEPEND="sys-devel/gettext"
 DEPEND="${RDEPEND}
@@ -29,7 +29,11 @@ src_prepare() {
 }
 
 src_configure() {
-	python_execute_function -d -s
+	conf() {
+		econf \
+			$(use_enable java-sdk)
+	}
+	python_execute_function -s conf
 }
 
 src_compile() {
@@ -39,7 +43,7 @@ src_compile() {
 src_install() {
 	python_execute_function -d -s
 	python_clean_installation_image
-	dodoc README
+	dodoc README*
 }
 
 pkg_postinst() {
