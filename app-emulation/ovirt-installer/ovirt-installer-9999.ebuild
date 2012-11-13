@@ -6,7 +6,8 @@ EAPI=4
 
 SUPPORT_PYTHON_ABIS="1"
 PYTHON_DEPEND="*"
-inherit python git-2 autotools
+inherit python java-pkg-opt-2
+inherit git-2 autotools
 
 DESCRIPTION="ovirt-installer"
 HOMEPAGE="http://www.ovirt.org"
@@ -15,13 +16,27 @@ EGIT_REPO_URI="git://git.engineering.redhat.com/users/abarlev/${PN}.git"
 LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="-*"
-IUSE="java-sdk"
+IUSE=""
 
-RDEPEND="sys-devel/gettext"
+RDEPEND="sys-devel/gettext
+	java? (
+		>=virtual/jre-1.4
+		dev-java/commons-logging
+	)
+"
 DEPEND="${RDEPEND}
 	dev-python/pep8
 	dev-python/pyflakes
+	java? (
+		>=virtual/jdk-1.4
+		dev-java/junit:4
+	)
 "
+
+pkg_setup() {
+	python_pkg_setup
+	java-pkg-opt-2_pkg_setup
+}
 
 src_prepare() {
 	eautoreconf
@@ -31,7 +46,10 @@ src_prepare() {
 src_configure() {
 	conf() {
 		econf \
-			$(use_enable java-sdk)
+			$(use_enable java java-sdk) \
+			COMMONS_LOGGING_JAR=$(java-pkg_getjar commons-logging \
+				commons-logging.jar) \
+			JUNIT_JAR=$(java-pkg_getjar --build-only junit-4 junit.jar)
 	}
 	python_execute_function -s conf
 }
@@ -41,9 +59,17 @@ src_compile() {
 }
 
 src_install() {
-	python_execute_function -d -s
+	inst() {
+		emake install DESTDIR="${D}"
+
+		if use java; then
+			java-pkg_dojar target/ovirt-installer-*.jar
+			java-pkg_dojar target/vdsm-bootstrap-*.jar
+		fi
+		dodoc README*
+	}
+	python_execute_function -s inst
 	python_clean_installation_image
-	dodoc README*
 }
 
 pkg_postinst() {
