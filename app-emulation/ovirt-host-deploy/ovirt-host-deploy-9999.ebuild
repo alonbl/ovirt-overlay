@@ -9,16 +9,17 @@ PYTHON_DEPEND="*"
 inherit python java-pkg-opt-2
 inherit git-2 autotools
 
-DESCRIPTION="ovirt-installer"
+DESCRIPTION="OVirt host deploy"
 HOMEPAGE="http://www.ovirt.org"
 EGIT_REPO_URI="git://git.engineering.redhat.com/users/abarlev/${PN}.git"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="-*"
+KEYWORDS=""
 IUSE=""
 
 RDEPEND="sys-devel/gettext
+	app-emulation/otopi
 	java? (
 		>=virtual/jre-1.4
 		dev-java/commons-logging
@@ -46,10 +47,7 @@ src_prepare() {
 src_configure() {
 	conf() {
 		econf \
-			$(use_enable java java-sdk) \
-			COMMONS_LOGGING_JAR=$(java-pkg_getjar commons-logging \
-				commons-logging.jar) \
-			JUNIT_JAR=$(java-pkg_getjar --build-only junit-4 junit.jar)
+			$(use_enable java java-sdk)
 	}
 	python_execute_function -s conf
 }
@@ -62,10 +60,7 @@ src_install() {
 	inst() {
 		emake install DESTDIR="${D}"
 
-		if use java; then
-			java-pkg_dojar target/ovirt-installer-*.jar
-			java-pkg_dojar target/vdsm-bootstrap-*.jar
-		fi
+		use java && java-pkg_dojar target/ovirt-host-deploy*.jar
 		dodoc README*
 	}
 	python_execute_function -s inst
@@ -74,14 +69,14 @@ src_install() {
 
 pkg_postinst() {
 	local share=share # hack python eclass
-	python_mod_optimize ovirt_installer vdsm_bootstrap
+	python_mod_optimize $(echo "${PN}" | sed 's/-/_/g')
 	python_mod_optimize --allow-evaluated-non-sitedir-paths \
-		/usr/\${share}/ovirt-installer/plugins
+		/usr/\${share}/${PN}/plugins
 }
 
 pkg_postrm() {
 	local share=share # hack python eclass
-	python_mod_cleanup ovirt_installer vdsm_bootstrap
+	python_mod_cleanup $(echo "${PN}" | sed 's/-/_/g')
 	python_mod_cleanup --allow-evaluated-non-sitedir-paths \
-		/usr/\${share}/ovirt-installer/plugins
+		/usr/\${share}/${PN}/plugins
 }
