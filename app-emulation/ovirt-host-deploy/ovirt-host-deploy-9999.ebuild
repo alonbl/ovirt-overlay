@@ -11,7 +11,7 @@ inherit git-2 autotools
 
 DESCRIPTION="OVirt host deploy"
 HOMEPAGE="http://www.ovirt.org"
-EGIT_REPO_URI="git://git.engineering.redhat.com/users/abarlev/${PN}.git"
+EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}.git"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -19,7 +19,7 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="sys-devel/gettext
-	app-emulation/otopi
+	app-emulation/otopi[java=]
 	java? (
 		>=virtual/jre-1.4
 		dev-java/commons-logging

@@ -43,6 +43,7 @@ JARS="
 	dev-java/stax
 	dev-java/validation-api
 	dev-java/ws-commons-util
+	app-emulation/ovirt-host-deploy[java]
 	"
 
 DEPEND=">=virtual/jdk-1.7
@@ -128,6 +129,8 @@ slf4j-api slf4j-api
 stax stax
 validation-api validation-api-1.0
 ws-commons-util ws-commons-util
+otopi otopi
+ovirt-host-deploy ovirt-host-deploy
 __EOF__
 		# TODO: we still have binaries
 		cd "${ED}/usr/share/ovirt-engine/engine.ear/restapi.war/WEB-INF/lib"
