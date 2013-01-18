@@ -38,10 +38,10 @@ RDEPEND="
 	sys-fs/dosfstools
 	sys-fs/lvm2
 	sys-fs/multipath-tools
-	sys-fs/udev
 	sys-process/procps
 	sys-process/psmisc
 	virtual/cdrtools
+	virtual/udev
 "
 #	/usr/sbin/persist
 #	/usr/sbin/unpersist
