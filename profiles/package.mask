@@ -1,3 +1,4 @@
 # oVirt live ebuilds
 =app-emulation/ovirt-engine-cli-9999
 =app-emulation/ovirt-engine-sdk-9999
+=app-emulation/ovirt-iso-uploader-9999
