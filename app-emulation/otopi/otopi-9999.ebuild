@@ -2,14 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
+PYTHON_COMPAT=( python{2_6,2_7,3_1,3_2,3_3} )
 
-SUPPORT_PYTHON_ABIS="1"
-PYTHON_DEPEND="*"
-inherit python java-pkg-opt-2
+inherit python-r1 java-pkg-opt-2
 inherit git-2 autotools
 
-DESCRIPTION="OVirt Task Oriented Pluggable Installer/Implementation"
+DESCRIPTION="oVirt Task Oriented Pluggable Installer/Implementation"
 HOMEPAGE="http://www.ovirt.org"
 EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}.git"
 
@@ -19,8 +18,9 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="sys-devel/gettext
+	${PYTHON_DEPS}
 	java? (
-		>=virtual/jre-1.4
+		>=virtual/jre-1.5
 		dev-java/commons-logging
 	)
 "
@@ -28,15 +28,10 @@ DEPEND="${RDEPEND}
 	dev-python/pep8
 	dev-python/pyflakes
 	java? (
-		>=virtual/jdk-1.4
+		>=virtual/jdk-1.5
 		dev-java/junit:4
 	)
 "
-
-pkg_setup() {
-	python_pkg_setup
-	java-pkg-opt-2_pkg_setup
-}
 
 src_prepare() {
 	eautoreconf
@@ -44,45 +39,37 @@ src_prepare() {
 }
 
 src_configure() {
-	conf() {
-		local extra_conf
-		if use java; then
-			export COMMONS_LOGGING_JAR="$(java-pkg_getjar commons-logging \
-					commons-logging.jar)"
-			export JUNIT_JAR="$(java-pkg_getjar --build-only junit-4 junit.jar)"
-		fi
+	python_foreach_impl run_in_build_dir default
+
+	if use java; then
+		export COMMONS_LOGGING_JAR="$(java-pkg_getjar commons-logging \
+				commons-logging.jar)"
+		export JUNIT_JAR="$(java-pkg_getjar --build-only junit-4 junit.jar)"
 		econf \
-			$(use_enable java java-sdk) \
-			${extra_conf}
-	}
-	python_execute_function -s conf
+			$(use_enable java java-sdk)
+	fi
 }
 
 src_compile() {
-	python_execute_function -d -s
+	python_foreach_impl run_in_build_dir default
+
+	use java && default
 }
 
 src_install() {
 	inst() {
-		emake install DESTDIR="${D}"
-
-		use java && java-pkg_dojar target/${PN}*.jar
-		dodoc README*
+		emake install DESTDIR="${ED}" am__py_compile=true
+		python_optimize
+		python_optimize "${ED}/usr/share/otopi/plugins"
 	}
-	python_execute_function -s inst
-	python_clean_installation_image
+	python_foreach_impl run_in_build_dir inst
+
+	use java && java-pkg_dojar target/${PN}*.jar
+	dodoc README*
 }
 
-pkg_postinst() {
-	local share=share # hack python eclass
-	python_mod_optimize ${PN}
-	python_mod_optimize --allow-evaluated-non-sitedir-paths \
-		/usr/\${share}/${PN}/plugins
-}
-
-pkg_postrm() {
-	local share=share # hack python eclass
-	python_mod_cleanup ${PN}
-	python_mod_cleanup --allow-evaluated-non-sitedir-paths \
-		/usr/\${share}/${PN}/plugins
+run_in_build_dir() {
+	pushd "${BUILD_DIR}" > /dev/null
+	"$@"
+	popd > /dev/null
 }
