@@ -1,0 +1,2 @@
+# oVirt live ebuilds
+=app-emulation/ovirt-engine-sdk-9999
