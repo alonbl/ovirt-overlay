@@ -24,6 +24,7 @@ RDEPEND="
 	app-emulation/qemu
 	dev-libs/openssl
 	dev-python/cherrypy
+	dev-python/m2crypto
 	dev-python/nose
 	dev-python/pyflakes
 	dev-python/pyparted
@@ -61,6 +62,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	sed -i '/pthreading/d' configure.ac # until we have pthreading it tree
 	eautoreconf
 }
 

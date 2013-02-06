@@ -1,15 +1,14 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
+PYTHON_COMPAT=( python{2_6,2_7,3_1,3_2,3_3} )
 
-SUPPORT_PYTHON_ABIS="1"
-PYTHON_DEPEND="*"
-inherit python java-pkg-opt-2
+inherit python-r1 java-pkg-opt-2
 inherit git-2 autotools
 
-DESCRIPTION="OVirt host deploy"
+DESCRIPTION="oVirt Host Deploy"
 HOMEPAGE="http://www.ovirt.org"
 EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}.git"
 
@@ -19,25 +18,13 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="sys-devel/gettext
-	app-emulation/otopi[java=]
-	java? (
-		>=virtual/jre-1.4
-		dev-java/commons-logging
-	)
+	${PYTHON_DEPS}
+	java? ( >=virtual/jre-1.5 )
 "
 DEPEND="${RDEPEND}
 	dev-python/pep8
 	dev-python/pyflakes
-	java? (
-		>=virtual/jdk-1.4
-		dev-java/junit:4
-	)
-"
-
-pkg_setup() {
-	python_pkg_setup
-	java-pkg-opt-2_pkg_setup
-}
+	java? ( >=virtual/jdk-1.5 )"
 
 src_prepare() {
 	eautoreconf
@@ -45,38 +32,34 @@ src_prepare() {
 }
 
 src_configure() {
-	conf() {
+	python_foreach_impl run_in_build_dir default
+
+	if use java; then
 		econf \
 			$(use_enable java java-sdk)
-	}
-	python_execute_function -s conf
+	fi
 }
 
 src_compile() {
-	python_execute_function -d -s
+	python_foreach_impl run_in_build_dir default
+
+	use java && default
 }
 
 src_install() {
 	inst() {
-		emake install DESTDIR="${D}"
-
-		use java && java-pkg_dojar target/ovirt-host-deploy*.jar
-		dodoc README*
+		emake install DESTDIR="${ED}" am__py_compile=true
+		python_optimize
+		python_optimize "${ED}/usr/share/ovirt-host-deploy/plugins"
 	}
-	python_execute_function -s inst
-	python_clean_installation_image
+	python_foreach_impl run_in_build_dir inst
+
+	use java && java-pkg_dojar target/${PN}*.jar
+	dodoc README*
 }
 
-pkg_postinst() {
-	local share=share # hack python eclass
-	python_mod_optimize $(echo "${PN}" | sed 's/-/_/g')
-	python_mod_optimize --allow-evaluated-non-sitedir-paths \
-		/usr/\${share}/${PN}/plugins
-}
-
-pkg_postrm() {
-	local share=share # hack python eclass
-	python_mod_cleanup $(echo "${PN}" | sed 's/-/_/g')
-	python_mod_cleanup --allow-evaluated-non-sitedir-paths \
-		/usr/\${share}/${PN}/plugins
+run_in_build_dir() {
+	pushd "${BUILD_DIR}" > /dev/null
+	"$@"
+	popd > /dev/null
 }
