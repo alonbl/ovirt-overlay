@@ -27,6 +27,7 @@ JARS="
 	dev-java/commons-beanutils
 	dev-java/commons-codec
 	dev-java/commons-collections
+	dev-java/commons-compress
 	dev-java/commons-httpclient
 	dev-java/commons-lang
 	dev-java/dom4j
@@ -80,7 +81,7 @@ pkg_setup() {
 		SYSCONF_DIR=/etc \
 		MAVENPOM_DIR=/tmp \
 		JAVA_DIR=/usr/share/${PN}/java \
-		$(use minimal && echo EXTRA_BUILD_FLAGS="-Dgwt.userAgent=gecko1_8")"
+		EXTRA_BUILD_FLAGS=$(use minimal && echo "-Dgwt.userAgent=gecko1_8")"
 }
 
 src_compile() {
@@ -120,6 +121,7 @@ aopalliance aopalliance-1
 c3p0 c3p0
 commons-beanutils commons-beanutils-1.7
 commons-codec commons-codec
+commons-compress commons-compress
 commons-collections commons-collections
 commons-lang commons-lang-2.1
 dom4j dom4j-1
