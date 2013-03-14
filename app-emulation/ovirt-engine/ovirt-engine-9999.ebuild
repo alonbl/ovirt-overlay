@@ -18,7 +18,7 @@ IUSE="+system-jars minimal"
 
 MAVEN_SLOT="3.0"
 MAVEN="mvn-${MAVEN_SLOT}"
-JBOSS_HOME="/usr/share/ovirt/jboss"
+JBOSS_HOME="/usr/share/ovirt/jboss-as"
 
 JARS="
 	dev-java/antlr

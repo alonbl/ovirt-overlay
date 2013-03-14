@@ -31,10 +31,11 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# remove native binaries
-	rm -fr \
-		modules/org/jboss/as/web/main/lib/ \
-		modules/org/hornetq/main/lib
+	for d in \
+			modules/org/jboss/as/web/main/lib \
+			modules/org/hornetq/main/lib; do
+		find "${d}" -type f -exec rm "{}" \;
+	done
 }
 
 src_install() {
