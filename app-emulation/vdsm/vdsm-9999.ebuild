@@ -54,6 +54,7 @@ RDEPEND="
 #	rpm?
 DEPEND="${RDEPEND}
 	dev-python/cheetah
+	dev-python/nose
 	dev-python/pep8"
 
 pkg_setup() {
