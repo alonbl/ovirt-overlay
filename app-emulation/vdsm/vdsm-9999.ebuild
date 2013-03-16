@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
-PYTHON_DEPEND="2:2.7"
+EAPI=5
+PYTHON_COMPAT=( python2_7 )
 
-inherit python git-2 autotools
+inherit python-r1 git-2 autotools
 
 DESCRIPTION="Virtual desktop server manager"
 HOMEPAGE="http://www.ovirt.org"
@@ -54,20 +54,16 @@ RDEPEND="
 #	rpm?
 DEPEND="${RDEPEND}
 	dev-python/cheetah
+	dev-python/nose
 	dev-python/pep8"
 
 pkg_setup() {
-	python_set_active_version 2
-	python_pkg_setup
+	python_export_best
 }
 
 src_prepare() {
 	sed -i '/pthreading/d' configure.ac # until we have pthreading it tree
 	eautoreconf
-}
-
-src_configure() {
-	econf PYTHON=$(PYTHON --absolute-path)
 }
 
 src_test() {
@@ -78,5 +74,5 @@ src_test() {
 
 src_install() {
 	default
-	python_convert_shebangs -r 2 "${ED}"
+	python_replicate_script ${D}/usr/bin/vdsm-tool
 }
