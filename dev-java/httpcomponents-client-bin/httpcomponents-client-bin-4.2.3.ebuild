@@ -19,10 +19,13 @@ RDEPEND=">=virtual/jre-1.5"
 
 S="${WORKDIR}/${P/-bin/}"
 
+# Oddly enough version 4.2.2 is bundled, not ${PV}
+HTTPCORE_PV="4.2.2"
+
 src_install() {
 	java-pkg_newjar "lib/httpclient-${PV}.jar" httpclient.jar
 	java-pkg_newjar "lib/httpclient-cache-${PV}.jar" httpclient-cache.jar
-	java-pkg_newjar "lib/httpcore-${PV}.jar" httpcore.jar
+	java-pkg_newjar "lib/httpcore-${HTTPCORE_PV}.jar" httpcore.jar
 	java-pkg_newjar "lib/httpmime-${PV}.jar" httpmime.jar
 	use doc && java-pkg_dojavadoc javadoc
 }
