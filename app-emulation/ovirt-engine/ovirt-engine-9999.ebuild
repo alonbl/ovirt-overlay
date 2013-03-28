@@ -2,14 +2,18 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
-PYTHON_DEPEND="2:2.7"
+EAPI=5
+PYTHON_COMPAT=( python2_7 )
 
-inherit eutils java-pkg-2 git-2 python
+CHECKREQS_MEMORY="8G"
+
+inherit eutils java-pkg-2 git-2 python-r1 check-reqs
 
 DESCRIPTION="oVirt Engine"
 HOMEPAGE="http://www.ovirt.org"
-EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
+#EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
+EGIT_REPO_URI="git://github.com/alonbl/ovirt-engine.git"
+EGIT_BRANCH="otopi"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -21,30 +25,26 @@ MAVEN="mvn-${MAVEN_SLOT}"
 JBOSS_HOME="/usr/share/ovirt/jboss-as"
 
 JARS="
-	dev-java/antlr
+	app-emulation/ovirt-host-deploy[java]
 	dev-java/aopalliance
 	dev-java/c3p0
 	dev-java/commons-beanutils
 	dev-java/commons-codec
 	dev-java/commons-collections
 	dev-java/commons-compress
+	dev-java/commons-configuration 
 	dev-java/commons-httpclient
+	dev-java/commons-jxpath 
 	dev-java/commons-lang
-	dev-java/dom4j
 	dev-java/httpcomponents-client-bin
-	dev-java/istack-commons-runtime
 	dev-java/jaxb
-	dev-java/jaxb-tools
 	dev-java/jdbc-postgresql
-	dev-java/jettison
-	dev-java/jsch
-	dev-java/log4j
 	dev-java/slf4j-api
-	dev-java/snakeyaml
 	dev-java/stax
 	dev-java/validation-api
 	dev-java/ws-commons-util
-	app-emulation/ovirt-host-deploy[java]
+	dev-java/xml-commons 
+	dev-java/xz-java
 	"
 
 DEPEND=">=virtual/jdk-1.7
@@ -52,6 +52,8 @@ DEPEND=">=virtual/jdk-1.7
 	app-arch/unzip
 	${JARS}"
 RDEPEND=">=virtual/jre-1.7
+	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
+	${PYTHON_DEPS}
 	app-emulation/ovirt-jboss-as-bin
 	dev-db/postgresql-server[uuid]
 	virtual/cron
@@ -59,49 +61,54 @@ RDEPEND=">=virtual/jre-1.7
 	app-arch/gzip
 	net-dns/bind-tools
 	sys-libs/cracklib[python]
+	dev-python/psycopg
+	dev-python/m2crypto
+	dev-python/cheetah
 	${JARS}"
 
 pkg_setup() {
-	python_set_active_version 2
-	python_pkg_setup
 	java-pkg-2_pkg_setup
 
 	enewgroup ovirt
-	enewuser ovirt -1 "" "" ovirt,postgres
+	enewuser ovirt -1 "" "" ovirt
+	enewuser vdsm -1 "" "" kvm
 
 	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
 		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
 
+	python_export python2_7	 PYTHON PYTHON_SITEDIR
+
 	# TODO: we should be able to disable pom install
-	MAVEN_MAKE_COMMON=" \
+	MAKE_COMMON_ARGS=" \
 		MVN=mvn-${MAVEN_SLOT} \
-		PYTHON=$(PYTHON --absolute-path) \
-		PYTHON_DIR=$(python_get_sitedir) \
+		PYTHON=${PYTHON} \
+		PYTHON_DIR=${PYTHON_SITEDIR} \
 		PREFIX=/usr \
 		SYSCONF_DIR=/etc \
+		LOCALSTATE_DIR=/var \
 		MAVENPOM_DIR=/tmp \
 		JAVA_DIR=/usr/share/${PN}/java \
-		EXTRA_BUILD_FLAGS=$(use minimal && echo "-Dgwt.userAgent=gecko1_8")"
+		EXTRA_BUILD_FLAGS=$(use minimal && echo "-Dgwt.userAgent=gecko1_8") \
+		DISPLAY_VERSION=${PVR} \
+		"
 }
 
 src_compile() {
 	emake -j1 \
-		${MAVEN_MAKE_COMMON} \
+		${MAKE_COMMON_ARGS} \
 		all \
 		|| die
 }
 
 src_install() {
 	emake -j1 \
-		${MAVEN_MAKE_COMMON} \
+		${MAKE_COMMON_ARGS} \
 		DESTDIR="${ED}" \
 		install \
 		|| die
 
 	# remove the pom files
 	rm -fr "${ED}/tmp"
-
-	newconfd packaging/fedora/engine-service.sysconfig ovirt-engine
 
 	# Posgresql JDBC driver is missing from maven output
 	cd "${ED}/usr/share/ovirt-engine/engine.ear/lib"
@@ -110,41 +117,61 @@ src_install() {
 
 	if use system-jars; then
 		# TODO: we still have binaries
+
 		cd "${ED}/usr/share/ovirt-engine/engine.ear/lib"
 		while read dir package; do
+			[ -z "${package}" ] && package="${dir}"
 			rm -f ${dir}*.jar
 			java-pkg_jar-from "${package}"
 		done << __EOF__
-commons-httpclient commons-httpclient-3
-antlr antlr
 aopalliance aopalliance-1
-c3p0 c3p0
+c3p0
 commons-beanutils commons-beanutils-1.7
-commons-codec commons-codec
-commons-compress commons-compress
-commons-collections commons-collections
+commons-codec
+commons-collections
+commons-compress
+commons-httpclient commons-httpclient-3
 commons-lang commons-lang-2.1
-dom4j dom4j-1
 jaxb jaxb-2
-jsch jsch
-slf4j-api slf4j-api 
-stax stax
+otopi
+ovirt-host-deploy
+slf4j-api
+stax
 validation-api validation-api-1.0
-ws-commons-util ws-commons-util
-otopi otopi
-ovirt-host-deploy ovirt-host-deploy
-__EOF__
-		# TODO: we still have binaries
-		cd "${ED}/usr/share/ovirt-engine/engine.ear/restapi.war/WEB-INF/lib"
-		while read dir package; do
-			rm -f ${dir}*.jar
-			java-pkg_jar-from "${package}"
-		done << __EOF__
-commons-codec commons-codec
-log4j log4j
-snakeyaml snakeyaml
+ws-commons-util
+xml-apis xml-commons
+xz xz-java
 __EOF__
 		cd "${S}"
+
+		find "${ED}/usr/share/ovirt-engine/modules" -name module.xml | \
+		while read module; do
+			cd "$(dirname "${module}")"
+			while read current package name; do
+				[ -z "${package}" ] && package="${current}"
+				if grep -q "<resource-root path=\"${current}" module.xml; then
+					rm -f ${current}*.jar
+					java-pkg_jar-from "${package}"
+					if ! [ -e "${current}.jar" ]; then
+						if [ -n "${name}" ]; then
+							ln -s ${name}.jar "${current}.jar"
+						elif [ "${current}" != "${package}" ]; then
+							ln -s "${package}.jar" "${current}.jar"
+						fi
+					fi
+				fi
+			done << __EOF__
+commons-compress
+commons-configuration
+commons-httpclient commons-httpclient-3
+commons-jxpath
+otopi otopi otopi*
+ovirt-host-deploy ovirt-host-deploy ovirt-host-deploy*
+postgresql jdbc-postgresql
+slf4j-api
+ws-commons-util
+__EOF__
+		done
 	fi
 
 	# TODO:
@@ -155,18 +182,78 @@ __EOF__
 	rm -fr \
 		"${ED}/etc/tmpfiles.d" \
 		"${ED}/etc/rc.d" \
-		"${ED}/etc/sysconfig" \
-		"${ED}/lib/systemd" \
-		"${ED}/usr/share/ovirt-engine/modules"
+		"${ED}/lib/systemd"
 
-	fowners ovirt:ovirt -R /etc/ovirt-engine
-	fowners ovirt:ovirt -R /etc/pki/ovirt-engine
+	# install only 2nd generation setup
+	rm "${ED}/usr/bin/engine-setup"
+	dosym engine-setup-2 /usr/bin/engine-setup
+
+	fowners ovirt:ovirt /etc/ovirt-engine/engine.conf{,.d}
+	fowners ovirt:ovirt /etc/pki/ovirt-engine/{,certs,requests,private}
 
 	diropts -o ovirt -g ovirt
-	keepdir /var/log/ovirt-engine/{notifier,engine-manage-domains}
-	keepdir /var/lib/ovirt-engine/{deployments,content}
+	keepdir /var/log/ovirt-engine/{,notifier,engine-manage-domains,host-deploy}
+	keepdir /var/lib/ovirt-engine/{,deployments,content}
 	keepdir /var/cache/ovirt-engine
-	keepdir /var/lock/ovirt-engine
 
-	python_convert_shebangs -r 2 "${ED}"
+	insinto /etc/ovirt-engine-setup.conf.d
+	newins "${FILESDIR}/gentoo-setup.conf" "01-gentoo.conf"
+	insinto /etc/ovirt-engine-setup.env.d
+	newins "${FILESDIR}/gentoo-setup.env.conf" "01-gentoo.conf"
+
+	#
+	# Force TLS/SSL for selected applications.
+	#
+	for war in restapi userportal webadmin; do
+		sed -i \
+			-e 's#<transport-guarantee>NONE</transport-guarantee>#<transport-guarantee>CONFIDENTIAL</transport-guarantee>#' \
+			"${ED}/usr/share/ovirt-engine/engine.ear/${war}.war/WEB-INF/web.xml"
+	done
+
+	python_export python2_7	EPYTHON PYTHON
+	find "${ED}" -name '*.py' | while read f; do
+		local shebang=$(head -n 1 "${f}")
+		from="#!/usr/bin/python"
+		to="#!${PYTHON}"
+		if [ "${shebang}" = "${from}" ]; then
+			sed -i -e "1s:${from}:${to}:" "${f}"
+		fi
+	done
+	python_optimize
+	python_optimize "${ED}/usr/share/ovirt-engine"
+
+	newinitd "${FILESDIR}/ovirt-engine.init.d" "ovirt-engine"
+}
+
+pkg_postinst() {
+	if use system-jars; then
+		WHITE_LIST="\
+bll.jar|\
+common.jar|\
+compat.jar|\
+dal.jar|\
+frontend.jar|\
+gwt-extension.jar|\
+gwt-servlet.jar|\
+scheduler.jar|\
+searchbackend.jar|\
+tools.jar|\
+utils.jar|\
+vdsbroker.jar\
+"
+
+		ewarn "system-jars was selected, however, these componets still binary:"
+		ewarn "$( \
+			find "${ED}" -name '*.jar' -type f | \
+			xargs -n1 basename | sort | uniq | \
+			grep -v -E "${WHITE_LIST}" \
+		)"
+	fi
+
+	ewarn "You should enable proxy by adding the following to /etc/conf.d/apache2"
+	ewarn '    APACHE2_OPTS="${APACHE2_OPTS} -D PROXY"'
+}
+
+pkg_config() {
+	/usr/bin/engine-setup-2
 }
