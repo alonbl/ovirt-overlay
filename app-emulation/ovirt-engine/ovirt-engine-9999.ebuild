@@ -64,7 +64,12 @@ RDEPEND=">=virtual/jre-1.7
 	dev-python/psycopg
 	dev-python/m2crypto
 	dev-python/cheetah
+	dev-python/python-daemon
 	${JARS}"
+
+# for the unneeded custom logrotate: ovirtlogrot.sh
+RDEPEND="${RDEPEND}
+	app-arch/xz-utils"
 
 pkg_setup() {
 	java-pkg-2_pkg_setup
@@ -85,6 +90,7 @@ pkg_setup() {
 		PYTHON_DIR=${PYTHON_SITEDIR} \
 		PREFIX=/usr \
 		SYSCONF_DIR=/etc \
+		PKG_PKI_DIR=/etc/ovirt-engine/pki \
 		LOCALSTATE_DIR=/var \
 		MAVENPOM_DIR=/tmp \
 		JAVA_DIR=/usr/share/${PN}/java \
@@ -188,8 +194,7 @@ __EOF__
 	rm "${ED}/usr/bin/engine-setup"
 	dosym engine-setup-2 /usr/bin/engine-setup
 
-	fowners ovirt:ovirt /etc/ovirt-engine/engine.conf{,.d}
-	fowners ovirt:ovirt /etc/pki/ovirt-engine/{,certs,requests,private}
+	fowners ovirt:ovirt /etc/ovirt-engine/pki/{,certs,requests,private}
 
 	diropts -o ovirt -g ovirt
 	keepdir /var/log/ovirt-engine/{,notifier,engine-manage-domains,host-deploy}
