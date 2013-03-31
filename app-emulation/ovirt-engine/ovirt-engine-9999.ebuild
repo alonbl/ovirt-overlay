@@ -94,6 +94,8 @@ pkg_setup() {
 		LOCALSTATE_DIR=/var \
 		MAVENPOM_DIR=/tmp \
 		JAVA_DIR=/usr/share/${PN}/java \
+		PKG_USER=ovirt \
+		PKG_GROUP=ovirt \
 		EXTRA_BUILD_FLAGS=$(use minimal && echo "-Dgwt.userAgent=gecko1_8") \
 		DISPLAY_VERSION=${PVR} \
 		"
