@@ -228,9 +228,7 @@ __EOF__
 	python_optimize "${ED}/usr/share/ovirt-engine"
 
 	newinitd "${FILESDIR}/ovirt-engine.init.d" "ovirt-engine"
-}
 
-pkg_postinst() {
 	if use system-jars; then
 		WHITE_LIST="\
 bll.jar|\
@@ -246,13 +244,18 @@ tools.jar|\
 utils.jar|\
 vdsbroker.jar\
 "
-
-		ewarn "system-jars was selected, however, these componets still binary:"
-		ewarn "$( \
+		BLACK_LIST_JARS="$(
 			find "${ED}" -name '*.jar' -type f | \
-			xargs -n1 basename | sort | uniq | \
+			xargs -n1 basename -- | sort | uniq | \
 			grep -v -E "${WHITE_LIST}" \
 		)"
+	fi
+}
+
+pkg_postinst() {
+	if use system-jars; then
+		ewarn "system-jars was selected, however, these componets still binary:"
+		ewarn "$(echo "${BLACK_LIST_JARS}" | sed 's/^/\t/')"
 	fi
 
 	ewarn "You should enable proxy by adding the following to /etc/conf.d/apache2"
