@@ -204,7 +204,7 @@ __EOF__
 	insinto /etc/ovirt-engine-setup.conf.d
 	newins "${FILESDIR}/gentoo-setup.conf" "01-gentoo.conf"
 	insinto /etc/ovirt-engine-setup.env.d
-	newins "${FILESDIR}/gentoo-setup.env.conf" "01-gentoo.conf"
+	newins "${FILESDIR}/gentoo-setup.env" "01-gentoo.env"
 
 	#
 	# Force TLS/SSL for selected applications.
@@ -260,5 +260,5 @@ vdsbroker.jar\
 }
 
 pkg_config() {
-	/usr/bin/engine-setup-2
+	/usr/bin/engine-setup
 }
