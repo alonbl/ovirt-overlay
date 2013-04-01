@@ -6,7 +6,11 @@
 command="/usr/bin/engine-service"
 command_args="--quiet --foreground start"
 command_background="yes"
-start_stop_daemon_args="--user ovirt:ovirt"
+start_stop_daemon_args=" \
+	--user ovirt:ovirt \
+	--stdout=/var/log/ovirt-engine/console.log \
+	--stderr=/var/log/ovirt-engine/console.log \
+"
 pidfile="/var/run/ovirt-engine.pid"
 
 depend() {
