@@ -4,7 +4,7 @@
 # $Header: $
 
 command="/usr/bin/engine-service"
-command_args="--quiet --foreground start"
+command_args="start"
 command_background="yes"
 start_stop_daemon_args=" \
 	--user ovirt:ovirt \
