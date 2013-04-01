@@ -4,7 +4,7 @@
 # $Header: $
 
 command="/usr/bin/engine-service"
-command_args="--pidfile ${OVIRT_ENGINE_PIDFILE} --quiet --foreground start"
+command_args="--quiet --foreground start"
 command_background="yes"
 start_stop_daemon_args="--user ovirt:ovirt"
 pidfile="/var/run/ovirt-engine.pid"
@@ -14,3 +14,6 @@ depend() {
 	need net
 }
 
+start_pre() {
+	ulimit -n ${NOFILE:-65535}
+}
