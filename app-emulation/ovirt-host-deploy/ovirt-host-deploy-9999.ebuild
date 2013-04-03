@@ -18,8 +18,8 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="sys-devel/gettext
-	app-emulation/otopi[${PYTHON_USEDEP}]
 	${PYTHON_DEPS}
+	app-emulation/otopi[${PYTHON_USEDEP}]
 	java? ( >=virtual/jre-1.5 )
 "
 DEPEND="${RDEPEND}
