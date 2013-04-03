@@ -5,16 +5,15 @@
 EAPI=5
 PYTHON_COMPAT=( python2_7 )
 
-inherit user python-r1 autotools git-2
+inherit user python-r1 versionator
 
 DESCRIPTION="Upload ISOs to Open Virtualization Manager"
 HOMEPAGE="http://gerrit.ovirt.org"
-EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}"
-EGIT_BRANCH="master"
+SRC_URI="http://resources.ovirt.org/releases/$(get_version_component_range 1-2)/src/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="sys-devel/gettext
@@ -28,12 +27,15 @@ pkg_setup() {
 }
 
 src_prepare() {
-	eautoreconf
 	python_copy_sources
 }
 
 src_configure() {
-	python_foreach_impl run_in_build_dir default
+	# temporary
+	conf() {
+		econf --disable-python-syntax-check
+	}
+	python_foreach_impl run_in_build_dir conf
 }
 
 src_compile() {

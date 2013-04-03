@@ -1,3 +1,9 @@
+*ovirt-iso-uploader-3.2.1 (03 Apr 2013)
+
+  03 Apr 2013; Alon Bar-Lev <alonbl@redhat.com>
+  +ovirt-iso-uploader-3.2.1.ebuild, ovirt-iso-uploader-9999.ebuild:
+  Add ovirt-iso-uploader-3.2.1
+
   03 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
   ovirt-iso-uploader-9999.ebuild:
   initial add
