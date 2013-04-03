@@ -1,17 +1,13 @@
 #!/sbin/runscript
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-command="/usr/bin/engine-service"
-command_args="start"
-command_background="yes"
-start_stop_daemon_args=" \
-	--user ovirt:ovirt \
-	--stdout=/var/log/ovirt-engine/console.log \
-	--stderr=/var/log/ovirt-engine/console.log \
-"
 pidfile="/var/run/ovirt-engine.pid"
+command="/usr/bin/engine-service"
+command_args="--pidfile=${pidfile} start"
+command_background="yes"
+start_stop_daemon_args="--user ovirt:ovirt"
 
 depend() {
 	use logger

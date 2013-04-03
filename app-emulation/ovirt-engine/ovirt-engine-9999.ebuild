@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python2_7 )
 
 CHECKREQS_MEMORY="8G"
 
-inherit eutils java-pkg-2 git-2 python-r1 check-reqs
+inherit user java-pkg-2 git-2 python-r1 check-reqs
 
 DESCRIPTION="oVirt Engine"
 HOMEPAGE="http://www.ovirt.org"
@@ -32,18 +32,17 @@ JARS="
 	dev-java/commons-codec
 	dev-java/commons-collections
 	dev-java/commons-compress
-	dev-java/commons-configuration 
+	dev-java/commons-configuration
 	dev-java/commons-httpclient
-	dev-java/commons-jxpath 
+	dev-java/commons-jxpath
 	dev-java/commons-lang
-	dev-java/httpcomponents-client-bin
 	dev-java/jaxb
 	dev-java/jdbc-postgresql
 	dev-java/slf4j-api
 	dev-java/stax
 	dev-java/validation-api
-	dev-java/ws-commons-util
-	dev-java/xml-commons 
+	dev-java/xml-commons
+	dev-java/xmlrpc-client-bin
 	dev-java/xz-java
 	"
 
@@ -73,6 +72,7 @@ RDEPEND="${RDEPEND}
 
 pkg_setup() {
 	java-pkg-2_pkg_setup
+	python_export_best PYTHON PYTHON_SITEDIR
 
 	enewgroup ovirt
 	enewuser ovirt -1 "" "" ovirt
@@ -80,8 +80,6 @@ pkg_setup() {
 
 	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
 		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
-
-	python_export python2_7	 PYTHON PYTHON_SITEDIR
 
 	# TODO: we should be able to disable pom install
 	MAKE_COMMON_ARGS=" \
@@ -120,7 +118,7 @@ src_install() {
 
 	# Posgresql JDBC driver is missing from maven output
 	cd "${ED}/usr/share/ovirt-engine/engine.ear/lib"
-	java-pkg_jar-from jdbc-postgresql
+	java-pkg_jar-from --with-dependencies jdbc-postgresql
 	cd "${S}"
 
 	if use system-jars; then
@@ -130,7 +128,7 @@ src_install() {
 		while read dir package; do
 			[ -z "${package}" ] && package="${dir}"
 			rm -f ${dir}*.jar
-			java-pkg_jar-from "${package}"
+			java-pkg_jar-from --with-dependencies "${package}"
 		done << __EOF__
 aopalliance aopalliance-1
 c3p0
@@ -146,8 +144,8 @@ ovirt-host-deploy
 slf4j-api
 stax
 validation-api validation-api-1.0
-ws-commons-util
 xml-apis xml-commons
+xmlrpc-client xmlrpc-client-bin-4
 xz xz-java
 __EOF__
 		cd "${S}"
@@ -159,7 +157,7 @@ __EOF__
 				[ -z "${package}" ] && package="${current}"
 				if grep -q "<resource-root path=\"${current}" module.xml; then
 					rm -f ${current}*.jar
-					java-pkg_jar-from "${package}"
+					java-pkg_jar-from --with-dependencies "${package}"
 					if ! [ -e "${current}.jar" ]; then
 						if [ -n "${name}" ]; then
 							ln -s ${name}.jar "${current}.jar"
@@ -177,8 +175,9 @@ otopi otopi otopi*
 ovirt-host-deploy ovirt-host-deploy ovirt-host-deploy*
 postgresql jdbc-postgresql
 slf4j-api
-ws-commons-util
+xmlrpc-client xmlrpc-client-bin-4
 __EOF__
+		cd "${S}"
 		done
 	fi
 
@@ -203,11 +202,6 @@ __EOF__
 	keepdir /var/lib/ovirt-engine/{,deployments,content}
 	keepdir /var/cache/ovirt-engine
 
-	insinto /etc/ovirt-engine-setup.conf.d
-	newins "${FILESDIR}/gentoo-setup.conf" "01-gentoo.conf"
-	insinto /etc/ovirt-engine-setup.env.d
-	newins "${FILESDIR}/gentoo-setup.env" "01-gentoo.env"
-
 	#
 	# Force TLS/SSL for selected applications.
 	#
@@ -217,19 +211,24 @@ __EOF__
 			"${ED}/usr/share/ovirt-engine/engine.ear/${war}.war/WEB-INF/web.xml"
 	done
 
-	python_export python2_7	EPYTHON PYTHON
-	find "${ED}" -name '*.py' | while read f; do
+	python_export_best
+	#python_replicate_script "${ED}/usr/share/ovirt-engine/service/engine-service.py"
+	find "${ED}" -executable -name '*.py' | while read f; do
 		local shebang=$(head -n 1 "${f}")
 		from="#!/usr/bin/python"
 		to="#!${PYTHON}"
 		if [ "${shebang}" = "${from}" ]; then
-			sed -i -e "1s:${from}:${to}:" "${f}"
+			   sed -i -e "1s:${from}:${to}:" "${f}"
 		fi
 	done
 	python_optimize
 	python_optimize "${ED}/usr/share/ovirt-engine"
 
 	newinitd "${FILESDIR}/ovirt-engine.init.d" "ovirt-engine"
+	insinto /etc/ovirt-engine-setup.conf.d
+	newins "${FILESDIR}/gentoo-setup.conf" "01-gentoo.conf"
+	insinto /etc/ovirt-engine-setup.env.d
+	newins "${FILESDIR}/gentoo-setup.env" "01-gentoo.env"
 
 	if use system-jars; then
 		WHITE_LIST="\
