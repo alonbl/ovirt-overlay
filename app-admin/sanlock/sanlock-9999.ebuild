@@ -15,7 +15,7 @@ EGIT_REPO_URI="git://git.fedorahosted.org/sanlock.git"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS=""
 IUSE="python"
 
 RDEPEND="dev-libs/libaio
