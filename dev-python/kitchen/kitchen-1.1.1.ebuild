@@ -20,11 +20,3 @@ IUSE=""
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
-
-src_prepare() {
-	distutils_src_prepare
-}
-
-src_install() {
-	distutils_src_install
-}
