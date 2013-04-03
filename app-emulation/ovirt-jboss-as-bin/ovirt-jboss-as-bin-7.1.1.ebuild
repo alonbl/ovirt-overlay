@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -24,11 +24,10 @@ RDEPEND=">=virtual/jre-1.7"
 
 S="${WORKDIR}/${MY_P}.Final"
 
-
-pkg_setup() {
-	enewgroup ovirt
-	enewuser ovirt -1 "" "" ovirt,postgres
-}
+#pkg_setup() {
+#	enewgroup jboss
+#	enewuser jboss -1 "" "" jboss
+#}
 
 src_prepare() {
 	for d in \
@@ -39,17 +38,19 @@ src_prepare() {
 }
 
 src_install() {
-	insinto /usr/share/ovirt/jboss-as
+	local INTO="/usr/share/ovirt/jboss-as"
+	local PREFIX="/ovirt"
+	insinto "${INTO}"
 	doins -r .
 	for d in standalone docs; do
-		rm -fr "${ED}/usr/share/ovirt/jboss-as/${d}"
+		rm -fr "${ED}${INTO}/${d}"
 	done
 	dodoc -r docs/*
-	insopts -o ovirt -g ovirt
-	diropts -o ovirt -g ovirt
-	dodir /var/lib/ovirt-engine/jboss-as
-	insinto /var/lib/ovirt-engine/jboss-as
+	#insopts -o jboss -g jboss
+	#diropts -o jboss -g jboss
+	dodir /var/lib/ovirt/jboss-as
+	insinto /var/lib${PREFIX}/jboss-as
 	doins -r standalone
-	dosym /var/lib/ovirt-engine/jboss-as /usr/share/ovirt/jboss-as/standalone
-	chmod +x "${ED}/usr/share/ovirt/jboss-as/bin"/*.sh
+	dosym /var/lib${PREFIX}/jboss-as "${INTO}/standalone"
+	chmod +x "${ED}${INTO}/bin"/*.sh
 }
