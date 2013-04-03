@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -64,7 +64,10 @@ src_install() {
 	}
 	python_foreach_impl run_in_build_dir inst
 
-	use java && java-pkg_dojar target/${PN}*.jar
+	if use java; then
+		java-pkg_register-dependency commons-logging
+		java-pkg_dojar target/${PN}*.jar
+	fi
 	dodoc README*
 }
 
