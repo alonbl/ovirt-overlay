@@ -1,3 +1,9 @@
+*ovirt-log-collector-3.2.1 (03 Apr 2013)
+
+  03 Apr 2013; Alon Bar-Lev <alonbl@redhat.com>
+  +ovirt-log-collector-3.2.1.ebuild, ovirt-log-collector-9999.ebuild:
+  Add ovirt-log-collector-3.2.1
+
 *ovirt-iso-uploader-9999 (21 Jan 2013)
 
   21 Jan 2013; Stijn Tintel <stijn+gentoo@linux-ipv6.be>
