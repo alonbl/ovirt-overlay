@@ -3,26 +3,15 @@
 # $Header: $
 
 EAPI=5
-PYTHON_DEPEND="2:2.6"
+PYTHON_DEPEND="2:2.7"
 SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.*"
 
-inherit distutils eutils
+inherit distutils eutils versionator
 
 DESCRIPTION="command line interface for the oVirt engine"
 HOMEPAGE="http://www.ovirt.org/wiki/CLI"
-SRC_URI=""
-
-case ${PV} in
-9999)
-	inherit autotools git-2
-	EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine-cli.git"
-	EGIT_BRANCH="master"
-	;;
-*)
-	SRC_URI="http://resources.ovirt.org/releases/${PV:0:3}/src/${P}.tar.gz"
-	;;
-esac
+SRC_URI="http://resources.ovirt.org/releases/$(get_version_component_range 1-2)/src/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -37,15 +26,3 @@ RDEPEND="${DEPEND}
 		dev-python/ply"
 
 S="${WORKDIR}/${PN}"
-
-src_unpack() {
-	[[ ${PV} == "9999" ]] && git-2_src_unpack || default
-}
-
-src_compile() {
-	distutils_src_compile
-}
-
-src_install() {
-	distutils_src_install
-}
