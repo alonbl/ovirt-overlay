@@ -3,49 +3,55 @@
 # $Header: $
 
 EAPI=5
-PYTHON_DEPEND="2:2.6"
-SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.*"
+PYTHON_COMPAT=( python2_7 )
 
-inherit eutils
+inherit user python-r1 autotools git-2
 
 DESCRIPTION="Upload isos to Open Virtualization Manager"
 HOMEPAGE="http://gerrit.ovirt.org"
-SRC_URI=""
-
-case ${PV} in
-9999)
-	inherit autotools git-2
-	EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-iso-uploader"
-	EGIT_BRANCH="master"
-	;;
-*)
-	SRC_URI=""
-	;;
-esac
+EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-iso-uploader"
+EGIT_BRANCH="master"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND="sys-devel/gettext"
-RDEPEND="${DEPEND}
-		app-emulation/ovirt-engine-sdk"
+RDEPEND="sys-devel/gettext
+	${PYTHON_DEPS}"
+DEPEND="${RDEPEND}
+	app-emulation/ovirt-engine-sdk"
 
 pkg_setup() {
 	enewgroup kvm 36
 	enewuser vdsm 36 -1 -1 kvm
 }
 
-src_unpack() {
-	[[ ${PV} == "9999" ]] && git-2_src_unpack || default
+src_prepare() {
+	eautoreconf
+	python_copy_sources
 }
 
-src_prepare() {
-	[[ ${PV} == "9999" ]] && eautoreconf
+src_configure() {
+	python_foreach_impl run_in_build_dir default
 }
 
 src_compile() {
-	emake all || eerror "Failed"
+	python_foreach_impl run_in_build_dir default
+}
+
+src_install() {
+	inst() {
+		emake install DESTDIR="${ED}" am__py_compile=true
+		python_export ${EPYTHON} PYTHON_SITEDIR
+		python_replicate_script "${ED}${PYTHON_SITEDIR}/ovirt_iso_uploader/__main__.py"
+		python_optimize
+	}
+	python_foreach_impl run_in_build_dir inst
+}
+
+run_in_build_dir() {
+	pushd "${BUILD_DIR}" > /dev/null
+	"$@"
+	popd > /dev/null
 }
