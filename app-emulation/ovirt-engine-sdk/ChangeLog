@@ -1,3 +1,7 @@
+  03 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> metadata.xml,
+  ovirt-engine-sdk-3.2.0.8.ebuild, ovirt-engine-sdk-9999.ebuild:
+  fixup
+
 *ovirt-engine-sdk-3.2.0.8 (21 Jan 2013)
 *ovirt-engine-sdk-9999 (21 Jan 2013)
 

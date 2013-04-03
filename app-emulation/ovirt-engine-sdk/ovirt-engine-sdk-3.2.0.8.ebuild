@@ -7,21 +7,11 @@ PYTHON_DEPEND="2:2.6"
 SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.*"
 
-inherit distutils eutils
+inherit distutils eutils versionator
 
 DESCRIPTION="A SDK interface to oVirt Virtualization"
 HOMEPAGE="http://www.ovirt.org/SDK"
-
-case ${PV} in
-9999)
-	inherit autotools git-2
-	EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine-sdk.git"
-	EGIT_BRANCH="master"
-	;;
-*)
-	SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
-	;;
-esac
+SRC_URI="mirror://pypi/$(get_major_version)/${PN}/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -30,15 +20,3 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="${DEPEND}"
-
-src_unpack() {
-	[[ ${PV} == "9999" ]] && git-2_src_unpack || default
-}
-
-src_compile() {
-	distutils_src_compile
-}
-
-src_install() {
-	distutils_src_install
-}
