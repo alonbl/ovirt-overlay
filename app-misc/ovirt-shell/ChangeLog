@@ -1,0 +1,5 @@
+*ovirt-shell-3.3.0.1 (04 Apr 2013)
+
+  04 Apr 2013; Ewoud kohl van Wijngaarden <ekohl@gentoo.org> +metadata.xml,
+  +ovirt-shell-3.3.0.1.ebuild:
+  Add ovirt-shell and its dependencies
