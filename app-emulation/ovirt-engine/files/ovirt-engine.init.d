@@ -4,8 +4,8 @@
 # $Header: $
 
 pidfile="/var/run/ovirt-engine.pid"
-command="/usr/bin/engine-service"
-command_args="--pidfile=${pidfile} start"
+command="/usr/share/ovirt-engine/service/engine-service.py"
+command_args="${OVIRT_ENGINE_EXTRA_ARGS} start"
 command_background="yes"
 start_stop_daemon_args="--user ovirt:ovirt"
 
