@@ -3,11 +3,9 @@
 # $Header: $
 
 EAPI="5"
-PYTHON_DEPEND="2:2.5"
-SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.*"
 
-inherit distutils
+PYTHON_COMPAT=( python{2_5,2_6,2_7} )
+inherit distutils-r1
 
 DESCRIPTION="Kitchen contains a cornucopia of useful code"
 HOMEPAGE="http://pypi.python.org/pypi/kitchen"
@@ -18,5 +16,5 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND=""
+RDEPEND="${PYTHON_DEPS}"
 DEPEND="${RDEPEND}"
