@@ -16,10 +16,9 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-RDEPEND="sys-devel/gettext
-	${PYTHON_DEPS}"
-DEPEND="${RDEPEND}
-	app-emulation/ovirt-engine-sdk"
+DEPEND="${PYTHON_DEPS}"
+RDEPEND="${DEPEND}
+	>=dev-python/python-exec-0.3"
 
 src_prepare() {
 	python_copy_sources
