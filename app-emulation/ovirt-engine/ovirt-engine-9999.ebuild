@@ -64,6 +64,7 @@ RDEPEND=">=virtual/jre-1.7
 	dev-python/m2crypto
 	dev-python/cheetah
 	dev-python/python-daemon
+	>=dev-python/python-exec-0.3
 	${JARS}"
 
 # for the unneeded custom logrotate: ovirtlogrot.sh
@@ -212,14 +213,8 @@ __EOF__
 	done
 
 	python_export_best
-	#python_replicate_script "${ED}/usr/share/ovirt-engine/service/engine-service.py"
 	find "${ED}" -executable -name '*.py' | while read f; do
-		local shebang=$(head -n 1 "${f}")
-		from="#!/usr/bin/python"
-		to="#!${PYTHON}"
-		if [ "${shebang}" = "${from}" ]; then
-			   sed -i -e "1s:${from}:${to}:" "${f}"
-		fi
+		python_replicate_script "${f}"
 	done
 	python_optimize
 	python_optimize "${ED}/usr/share/ovirt-engine"
