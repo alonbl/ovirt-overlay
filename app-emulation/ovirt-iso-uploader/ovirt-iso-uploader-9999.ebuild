@@ -17,9 +17,9 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-RDEPEND="sys-devel/gettext
-	${PYTHON_DEPS}"
-DEPEND="${RDEPEND}
+DEPEND="${PYTHON_DEPS}"
+RDEPEND="${DEPEND}
+	>=dev-python/python-exec-0.3
 	app-emulation/ovirt-engine-sdk"
 
 pkg_setup() {
