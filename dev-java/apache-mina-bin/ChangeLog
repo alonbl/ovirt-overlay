@@ -1,0 +1,5 @@
+*apache-mina-bin-2.0.7 (06 Apr 2013)
+
+  06 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> +apache-mina-bin-2.0.7.ebuild,
+  +metadata.xml:
+  initial import
