@@ -27,7 +27,7 @@ JBOSS_HOME="/usr/share/ovirt/jboss-as"
 JARS="
 	app-emulation/ovirt-host-deploy[java]
 	dev-java/aopalliance
-	dev-java/c3p0
+	dev-java/apache-sshd-bin
 	dev-java/commons-beanutils
 	dev-java/commons-codec
 	dev-java/commons-collections
@@ -36,14 +36,17 @@ JARS="
 	dev-java/commons-httpclient
 	dev-java/commons-jxpath
 	dev-java/commons-lang
+	dev-java/hibernate-validator-bin
 	dev-java/jaxb
 	dev-java/jdbc-postgresql
+	dev-java/quartz-bin
 	dev-java/slf4j-api
 	dev-java/stax
 	dev-java/validation-api
 	dev-java/xml-commons
 	dev-java/xmlrpc-client-bin
 	dev-java/xz-java
+	java-virtuals/jaf
 	"
 
 DEPEND=">=virtual/jdk-1.7
@@ -123,26 +126,27 @@ src_install() {
 	cd "${S}"
 
 	if use system-jars; then
-		# TODO: we still have binaries
-
 		cd "${ED}/usr/share/ovirt-engine/engine.ear/lib"
 		while read dir package; do
 			[ -z "${package}" ] && package="${dir}"
 			rm -f ${dir}*.jar
 			java-pkg_jar-from --with-dependencies "${package}"
 		done << __EOF__
+activation jaf
 aopalliance aopalliance-1
-c3p0
 commons-beanutils commons-beanutils-1.7
 commons-codec
 commons-collections
 commons-compress
 commons-httpclient commons-httpclient-3
 commons-lang commons-lang-2.1
+hibernate-validator hibernate-validator-bin-4
 jaxb jaxb-2
 otopi
 ovirt-host-deploy
+quartz quartz-bin-4
 slf4j-api
+sshd-core apache-sshd-bin-4
 stax
 validation-api validation-api-1.0
 xml-apis xml-commons
@@ -175,7 +179,9 @@ commons-jxpath
 otopi otopi otopi*
 ovirt-host-deploy ovirt-host-deploy ovirt-host-deploy*
 postgresql jdbc-postgresql
+quartz quartz-bin-4
 slf4j-api
+sshd-core apache-sshd-bin-4
 xmlrpc-client xmlrpc-client-bin-4
 __EOF__
 		cd "${S}"
@@ -255,7 +261,10 @@ pkg_postinst() {
 	fi
 
 	ewarn "You should enable proxy by adding the following to /etc/conf.d/apache2"
-	ewarn '    APACHE2_OPTS="${APACHE2_OPTS} -D PROXY"'
+	ewarn '   APACHE2_OPTS="${APACHE2_OPTS} -D PROXY"'
+
+	elog "To configure package:"
+	elog "    emerge --config =${CATEGORY}/${PF}"
 }
 
 pkg_config() {
