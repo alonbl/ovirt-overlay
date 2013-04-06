@@ -1,0 +1,5 @@
+*quartz-bin-2.1.7 (06 Apr 2013)
+
+  06 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +quartz-bin-2.1.7.ebuild:
+  initial import
