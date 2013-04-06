@@ -1,0 +1,5 @@
+*hibernate-validator-bin-4.3.1 (06 Apr 2013)
+
+  06 Apr 2013; Alon Bar-Lev <alonbl@redhat.com>
+  +hibernate-validator-bin-4.3.1.ebuild, +metadata.xml:
+  initial import
