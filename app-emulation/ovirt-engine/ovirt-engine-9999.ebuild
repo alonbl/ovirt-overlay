@@ -46,7 +46,6 @@ JARS="
 	dev-java/xml-commons
 	dev-java/xmlrpc-client-bin
 	dev-java/xz-java
-	java-virtuals/jaf
 	"
 
 DEPEND=">=virtual/jdk-1.7
@@ -132,7 +131,6 @@ src_install() {
 			rm -f ${dir}*.jar
 			java-pkg_jar-from --with-dependencies "${package}"
 		done << __EOF__
-activation jaf
 aopalliance aopalliance-1
 commons-beanutils commons-beanutils-1.7
 commons-codec
