@@ -75,7 +75,7 @@ RDEPEND="${RDEPEND}
 
 pkg_setup() {
 	java-pkg-2_pkg_setup
-	python_export_best PYTHON PYTHON_SITEDIR
+	python_export_best EPYTHON PYTHON PYTHON_SITEDIR
 
 	enewgroup ovirt
 	enewuser ovirt -1 "" "" ovirt

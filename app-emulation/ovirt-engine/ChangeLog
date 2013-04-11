@@ -1,3 +1,6 @@
+  11 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
+  Add EPYTHON to export best, something has changed?
+
   07 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> files/gentoo-setup.conf:
   remove default non-root as it is in product
 
