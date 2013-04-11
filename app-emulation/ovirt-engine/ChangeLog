@@ -1,4 +1,7 @@
   11 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
+  No need postgres-server any more
+
+  11 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
   Add EPYTHON to export best, something has changed?
 
   07 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> files/gentoo-setup.conf:
