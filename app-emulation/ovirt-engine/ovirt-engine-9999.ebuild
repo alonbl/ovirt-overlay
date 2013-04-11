@@ -56,6 +56,7 @@ RDEPEND=">=virtual/jre-1.7
 	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
 	${PYTHON_DEPS}
 	app-emulation/ovirt-jboss-as-bin
+	>=app-emulation/otopi-1.0.2
 	dev-db/postgresql-base
 	virtual/cron
 	dev-libs/openssl
