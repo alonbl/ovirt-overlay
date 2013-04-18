@@ -17,14 +17,14 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-RDEPEND="sys-devel/gettext
-	${PYTHON_DEPS}
+RDEPEND="${PYTHON_DEPS}
 	java? (
 		>=virtual/jre-1.5
 		dev-java/commons-logging
 	)
 "
 DEPEND="${RDEPEND}
+	sys-devel/gettext
 	dev-python/pep8
 	dev-python/pyflakes
 	java? (
