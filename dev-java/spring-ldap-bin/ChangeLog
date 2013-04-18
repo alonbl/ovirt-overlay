@@ -1,0 +1,5 @@
+*spring-framework-bin-3.2.2 (18 Apr 2013)
+
+  18 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +spring-framework-bin-3.2.2.ebuild:
+  initial add
