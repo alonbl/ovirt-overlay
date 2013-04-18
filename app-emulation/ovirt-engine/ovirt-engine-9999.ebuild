@@ -25,27 +25,30 @@ MAVEN="mvn-${MAVEN_SLOT}"
 JBOSS_HOME="/usr/share/ovirt/jboss-as"
 
 JARS="
-	app-emulation/ovirt-host-deploy[java]
-	dev-java/aopalliance
-	dev-java/apache-sshd-bin
-	dev-java/commons-beanutils
-	dev-java/commons-codec
-	dev-java/commons-collections
-	dev-java/commons-compress
-	dev-java/commons-configuration
-	dev-java/commons-httpclient
-	dev-java/commons-jxpath
-	dev-java/commons-lang
-	dev-java/hibernate-validator-bin
-	dev-java/jaxb
 	dev-java/jdbc-postgresql
-	dev-java/quartz-bin
-	dev-java/slf4j-api
-	dev-java/stax
-	dev-java/validation-api
-	dev-java/xml-commons
-	dev-java/xmlrpc-client-bin
-	dev-java/xz-java
+	system-jars? (
+		app-emulation/otopi[java]
+		app-emulation/ovirt-host-deploy[java]
+		dev-java/aopalliance
+		dev-java/apache-sshd-bin
+		dev-java/commons-beanutils
+		dev-java/commons-codec
+		dev-java/commons-collections
+		dev-java/commons-compress
+		dev-java/commons-configuration
+		dev-java/commons-httpclient
+		dev-java/commons-jxpath
+		dev-java/commons-lang
+		dev-java/hibernate-validator-bin
+		dev-java/jaxb
+		dev-java/quartz-bin
+		dev-java/slf4j-api
+		dev-java/stax
+		dev-java/validation-api
+		dev-java/xml-commons
+		dev-java/xmlrpc-client-bin
+		dev-java/xz-java
+	)
 	"
 
 DEPEND=">=virtual/jdk-1.7
@@ -55,19 +58,18 @@ DEPEND=">=virtual/jdk-1.7
 RDEPEND=">=virtual/jre-1.7
 	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
 	${PYTHON_DEPS}
-	app-emulation/ovirt-jboss-as-bin
 	>=app-emulation/otopi-1.0.2
-	dev-db/postgresql-base
-	virtual/cron
-	dev-libs/openssl
-	app-arch/gzip
-	net-dns/bind-tools
-	sys-libs/cracklib[python]
-	dev-python/psycopg
-	dev-python/m2crypto
-	dev-python/cheetah
-	dev-python/python-daemon
 	>=dev-python/python-exec-0.3
+	app-emulation/ovirt-host-deploy
+	app-emulation/ovirt-jboss-as-bin
+	dev-db/postgresql-base
+	dev-libs/openssl
+	dev-python/cheetah
+	dev-python/m2crypto
+	dev-python/psycopg
+	dev-python/python-daemon
+	sys-libs/cracklib[python]
+	virtual/cron
 	${JARS}"
 
 # for the unneeded custom logrotate: ovirtlogrot.sh
