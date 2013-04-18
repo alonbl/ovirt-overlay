@@ -16,10 +16,11 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND="${PYTHON_DEPS}"
-RDEPEND="${DEPEND}
+RDEPEND="${PYTHON_DEPS}
 	>=dev-python/python-exec-0.3
 	app-emulation/ovirt-engine-sdk"
+DEPEND="${RDEPEND}
+	sys-devel/gettext"
 
 pkg_setup() {
 	enewgroup kvm 36
