@@ -17,9 +17,10 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND="${PYTHON_DEPS}"
-RDEPEND="${DEPEND}
+RDEPEND="${PYTHON_DEPS}
 	>=dev-python/python-exec-0.3"
+DEPEND="${RDEPEND}
+	sys-devel/gettext"
 
 src_prepare() {
 	eautoreconf
