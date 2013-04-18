@@ -17,12 +17,11 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-RDEPEND="sys-devel/gettext
-	${PYTHON_DEPS}
+RDEPEND="${PYTHON_DEPS}
 	app-emulation/otopi[${PYTHON_USEDEP}]
-	java? ( >=virtual/jre-1.5 )
-"
+	java? ( >=virtual/jre-1.5 )"
 DEPEND="${RDEPEND}
+	sys-devel/gettext
 	dev-python/pep8
 	dev-python/pyflakes
 	java? ( >=virtual/jdk-1.5 )"
