@@ -43,6 +43,8 @@ JARS="
 		dev-java/jaxb
 		dev-java/quartz-bin
 		dev-java/slf4j-api
+		dev-java/spring-framework-bin
+		dev-java/spring-ldap-bin
 		dev-java/stax
 		dev-java/validation-api
 		dev-java/xml-commons
@@ -122,39 +124,21 @@ src_install() {
 	# remove the pom files
 	rm -fr "${ED}/tmp"
 
-	# Posgresql JDBC driver is missing from maven output
-	cd "${ED}/usr/share/ovirt-engine/engine.ear/lib"
-	java-pkg_jar-from --with-dependencies jdbc-postgresql
-	cd "${S}"
-
 	if use system-jars; then
-		cd "${ED}/usr/share/ovirt-engine/engine.ear/lib"
-		while read dir package; do
-			[ -z "${package}" ] && package="${dir}"
-			rm -f ${dir}*.jar
-			java-pkg_jar-from --with-dependencies "${package}"
-		done << __EOF__
-aopalliance aopalliance-1
-commons-beanutils commons-beanutils-1.7
-commons-codec
-commons-collections
-commons-compress
-commons-httpclient commons-httpclient-3
+		find "${ED}/usr/share/ovirt-engine/engine.ear" -name 'lib' | \
+		while read lib; do
+			cd "${lib}"
+			while read name package; do
+				[ -z "${package}" ] && package="${name}"
+				if [ "$(find . -name "${name}*.jar" | wc -l)" != 0 ]; then
+					rm -f "${name}"*.jar
+					java-pkg_jar-from --with-dependencies "${package}"
+				fi
+			done << __EOF__
 commons-lang commons-lang-2.1
-hibernate-validator hibernate-validator-bin-4
-jaxb jaxb-2
-otopi
-ovirt-host-deploy
-quartz quartz-bin-4
-slf4j-api
-sshd-core apache-sshd-bin-4
-stax
-validation-api validation-api-1.0
-xml-apis xml-commons
-xmlrpc-client xmlrpc-client-bin-4
-xz xz-java
 __EOF__
-		cd "${S}"
+			cd "${S}"
+		done
 
 		find "${ED}/usr/share/ovirt-engine/modules" -name module.xml | \
 		while read module; do
@@ -163,7 +147,7 @@ __EOF__
 				[ -z "${package}" ] && package="${current}"
 				if grep -q "<resource-root path=\"${current}" module.xml; then
 					rm -f ${current}*.jar
-					java-pkg_jar-from --with-dependencies "${package}"
+					java-pkg_jar-from ${package//:/ }
 					if ! [ -e "${current}.jar" ]; then
 						if [ -n "${name}" ]; then
 							ln -s ${name}.jar "${current}.jar"
@@ -177,12 +161,24 @@ commons-compress
 commons-configuration
 commons-httpclient commons-httpclient-3
 commons-jxpath
+mina-core apache-mina-bin-4
 otopi otopi otopi*
 ovirt-host-deploy ovirt-host-deploy ovirt-host-deploy*
 postgresql jdbc-postgresql
 quartz quartz-bin-4
 slf4j-api
+spring-aop spring-framework-bin-4:spring-aop.jar
+spring-asm spring-framework-bin-4:spring-core.jar spring-core
+spring-beans spring-framework-bin-4:spring-beans.jar
+spring-context spring-framework-bin-4:spring-context.jar
+spring-core spring-framework-bin-4:spring-core.jar
+spring-expression spring-framework-bin-4:spring-expression.jar
+spring-instrument spring-framework-bin-4:spring-instrument.jar
+spring-jdbc spring-framework-bin-4:spring-jdbc.jar
+spring-tx spring-framework-bin-4:spring-tx.jar
+spring-ldap-core spring-ldap-bin-4:spring-ldap-core.jar
 sshd-core apache-sshd-bin-4
+ws-commons-util
 xmlrpc-client xmlrpc-client-bin-4
 __EOF__
 		cd "${S}"
@@ -241,6 +237,10 @@ dal.jar|\
 frontend.jar|\
 gwt-extension.jar|\
 gwt-servlet.jar|\
+interface-common-jaxrs.jar|\
+restapi-definition.jar|\
+restapi-jaxrs.jar|\
+restapi-types.jar|\
 scheduler.jar|\
 searchbackend.jar|\
 tools.jar|\
@@ -256,7 +256,7 @@ vdsbroker.jar\
 }
 
 pkg_postinst() {
-	if use system-jars; then
+	if use system-jars && [ -n "${BLACK_LIST_JARS}" ]; then
 		ewarn "system-jars was selected, however, these componets still binary:"
 		ewarn "$(echo "${BLACK_LIST_JARS}" | sed 's/^/\t/')"
 	fi
