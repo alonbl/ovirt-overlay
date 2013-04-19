@@ -65,6 +65,7 @@ RDEPEND=">=virtual/jre-1.7
 	app-emulation/ovirt-host-deploy
 	app-emulation/ovirt-jboss-as-bin
 	dev-db/postgresql-base
+	dev-libs/libxml2[python]
 	dev-libs/openssl
 	dev-python/cheetah
 	dev-python/m2crypto

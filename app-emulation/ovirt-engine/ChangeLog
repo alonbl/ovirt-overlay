@@ -1,3 +1,6 @@
+  19 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
+  Add dev-libs/libxml2 dependency
+
   18 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
   update dependencies, no embedded remains
 
