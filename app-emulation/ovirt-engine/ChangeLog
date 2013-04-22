@@ -1,3 +1,6 @@
+  22 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> files/ovirt-engine.init.d:
+  update service location
+
   21 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
   Add engine-cleanup
 
