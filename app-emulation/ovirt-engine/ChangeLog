@@ -1,3 +1,6 @@
+  25 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> files/ovirt-engine.init.d:
+  follow upstream service name
+
   22 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> files/ovirt-engine.init.d:
   update service location
 
