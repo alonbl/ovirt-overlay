@@ -104,6 +104,7 @@ pkg_setup() {
 		PKG_USER=ovirt \
 		PKG_GROUP=ovirt \
 		EXTRA_BUILD_FLAGS=$(use minimal && echo "-Dgwt.userAgent=gecko1_8") \
+		BUILD_LOCALES=$(use minimal && echo 0 || echo 1) \
 		DISPLAY_VERSION=${PVR} \
 		"
 }
