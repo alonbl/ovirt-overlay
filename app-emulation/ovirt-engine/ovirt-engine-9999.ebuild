@@ -57,11 +57,10 @@ DEPEND=">=virtual/jdk-1.7
 	dev-java/maven-bin:${MAVEN_SLOT}
 	app-arch/unzip
 	${JARS}"
-RDEPEND=">=virtual/jre-1.7
-	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
-	${PYTHON_DEPS}
+RDEPEND="${PYTHON_DEPS}
 	>=app-emulation/otopi-1.0.2
 	>=dev-python/python-exec-0.3
+	>=virtual/jre-1.7
 	app-emulation/ovirt-host-deploy
 	app-emulation/ovirt-jboss-as-bin
 	dev-db/postgresql-base
@@ -71,8 +70,10 @@ RDEPEND=">=virtual/jre-1.7
 	dev-python/m2crypto
 	dev-python/psycopg
 	dev-python/python-daemon
+	net-dns/bind-tools
 	sys-libs/cracklib[python]
 	virtual/cron
+	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
 	${JARS}"
 
 # for the unneeded custom logrotate: ovirtlogrot.sh
