@@ -1,0 +1,5 @@
+*noVNC-0.4 (30 May 2013)
+
+  30 May 2013; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +noVNC-0.4.ebuild:
+  initial import
