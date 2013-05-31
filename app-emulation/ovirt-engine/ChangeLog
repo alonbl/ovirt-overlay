@@ -1,3 +1,8 @@
+  31 May 2013; Alon Bar-Lev <alonbl@redhat.com>
+  +files/ovirt-websocket-proxy.init.d, files/ovirt-engine.init.d, metadata.xml,
+  ovirt-engine-9999.ebuild:
+  sync upstream
+
   14 May 2013; Alon Bar-Lev <alonbl@gentoo.org> ovirt-engine-9999.ebuild:
   add bind-tools dependency
 

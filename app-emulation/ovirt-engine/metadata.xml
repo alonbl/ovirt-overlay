@@ -5,5 +5,8 @@
 		<flag name='system-jars'>
 			Use system jars as much as possible.
 		</flag>
+		<flag name='novnc'>
+			Enable novnc support.
+		</flag>
 	</use>
 </pkgmetadata>

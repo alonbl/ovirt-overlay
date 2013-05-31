@@ -12,13 +12,12 @@ inherit user java-pkg-2 git-2 python-r1 check-reqs
 DESCRIPTION="oVirt Engine"
 HOMEPAGE="http://www.ovirt.org"
 #EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
-EGIT_REPO_URI="git://github.com/alonbl/ovirt-engine.git"
-EGIT_BRANCH="otopi"
+EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
-IUSE="+system-jars minimal"
+IUSE="+system-jars minimal +novnc"
 
 MAVEN_SLOT="3.0"
 MAVEN="mvn-${MAVEN_SLOT}"
@@ -72,12 +71,16 @@ RDEPEND="${PYTHON_DEPS}
 	dev-python/python-daemon
 	net-dns/bind-tools
 	sys-libs/cracklib[python]
-	virtual/cron
 	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
+	novnc? (
+		dev-python/websockify
+		www-misc/noVNC
+	)
 	${JARS}"
 
 # for the unneeded custom logrotate: ovirtlogrot.sh
 RDEPEND="${RDEPEND}
+	virtual/cron
 	app-arch/xz-utils"
 
 pkg_setup() {
@@ -108,6 +111,10 @@ pkg_setup() {
 		BUILD_LOCALES=$(use minimal && echo 0 || echo 1) \
 		DISPLAY_VERSION=${PVR} \
 		"
+}
+
+src_prepare() {
+	rm -f packaging/conf/ovirt-websocket-proxy.conf.defaults
 }
 
 src_compile() {
@@ -228,6 +235,7 @@ __EOF__
 	python_optimize "${ED}/usr/share/ovirt-engine"
 
 	newinitd "${FILESDIR}/ovirt-engine.init.d" "ovirt-engine"
+	use novnc && newinitd "${FILESDIR}/ovirt-websocket-proxy.init.d" "ovirt-websocket-proxy"
 	insinto /etc/ovirt-engine-setup.conf.d
 	newins "${FILESDIR}/gentoo-setup.conf" "01-gentoo.conf"
 	insinto /etc/ovirt-engine-setup.env.d
