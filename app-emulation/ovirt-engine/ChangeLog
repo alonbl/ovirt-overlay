@@ -1,3 +1,6 @@
+  31 May 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
+  remove workaround of master
+
   31 May 2013; Alon Bar-Lev <alonbl@redhat.com>
   +files/ovirt-websocket-proxy.init.d, files/ovirt-engine.init.d, metadata.xml,
   ovirt-engine-9999.ebuild:

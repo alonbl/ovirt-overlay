@@ -113,10 +113,6 @@ pkg_setup() {
 		"
 }
 
-src_prepare() {
-	rm -f packaging/conf/ovirt-websocket-proxy.conf.defaults
-}
-
 src_compile() {
 	emake -j1 \
 		${MAKE_COMMON_ARGS} \
