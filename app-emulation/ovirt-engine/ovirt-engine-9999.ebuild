@@ -78,11 +78,6 @@ RDEPEND="${PYTHON_DEPS}
 	)
 	${JARS}"
 
-# for the unneeded custom logrotate: ovirtlogrot.sh
-RDEPEND="${RDEPEND}
-	virtual/cron
-	app-arch/xz-utils"
-
 pkg_setup() {
 	java-pkg-2_pkg_setup
 	python_export_best EPYTHON PYTHON PYTHON_SITEDIR
@@ -114,14 +109,14 @@ pkg_setup() {
 }
 
 src_compile() {
-	emake -j1 \
+	emake \
 		${MAKE_COMMON_ARGS} \
 		all \
 		|| die
 }
 
 src_install() {
-	emake -j1 \
+	emake \
 		${MAKE_COMMON_ARGS} \
 		DESTDIR="${ED}" \
 		install \
