@@ -226,6 +226,7 @@ __EOF__
 	python_optimize "${ED}/usr/share/ovirt-engine"
 
 	newinitd "${FILESDIR}/ovirt-engine.init.d" "ovirt-engine"
+	newinitd "${FILESDIR}/ovirt-engine-notifier.init.d" "ovirt-engine-notifier"
 	use novnc && newinitd "${FILESDIR}/ovirt-websocket-proxy.init.d" "ovirt-websocket-proxy"
 	insinto /etc/ovirt-engine-setup.conf.d
 	newins "${FILESDIR}/gentoo-setup.conf" "01-gentoo.conf"

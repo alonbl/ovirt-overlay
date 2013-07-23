@@ -4,7 +4,7 @@
 # $Header: $
 
 pidfile="/var/run/ovirt-websocket-proxy.pid"
-command="/usr/share/ovirt-engine/services/ovirt-websocket-proxy.py"
+command="/usr/share/ovirt-engine/services/ovirt-websocket-proxy/ovirt-websocket-proxy.py"
 command_args="${OVIRT_ENGINE_EXTRA_ARGS} start"
 command_background="yes"
 start_stop_daemon_args="--user ovirt:ovirt"
