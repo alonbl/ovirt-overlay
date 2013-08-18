@@ -1,3 +1,6 @@
+  18 Aug 2013; Alon Bar-Lev <alonbl@gentoo.org> ovirt-engine-9999.ebuild:
+  sync with upstream
+
   23 Jul 2013; Alon Bar-Lev <alonbl@redhat.com>
   +files/ovirt-engine-notifier.init.d, files/ovirt-engine.init.d,
   files/ovirt-websocket-proxy.init.d, ovirt-engine-9999.ebuild:

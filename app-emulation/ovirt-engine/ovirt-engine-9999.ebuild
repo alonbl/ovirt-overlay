@@ -205,8 +205,8 @@ __EOF__
 	fowners ovirt:ovirt /etc/ovirt-engine/pki/{,certs,requests,private}
 
 	diropts -o ovirt -g ovirt
-	keepdir /var/log/ovirt-engine/{,notifier,engine-manage-domains,host-deploy}
-	keepdir /var/lib/ovirt-engine/{,deployments,content}
+	keepdir /var/log/ovirt-engine/{,host-deploy,setup,notifier,engine-manage-domains,dump}
+	keepdir /var/lib/ovirt-engine/{,deployments,content,setup,setup/answers}
 	keepdir /var/cache/ovirt-engine
 
 	#
