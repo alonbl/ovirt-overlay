@@ -196,12 +196,6 @@ __EOF__
 		"${ED}/etc/rc.d" \
 		"${ED}/lib/systemd"
 
-	# install only 2nd generation setup
-	for f in engine-setup engine-cleanup; do
-		rm "${ED}/usr/bin/${f}"
-		dosym "${f}-2" "/usr/bin/${f}"
-	done
-
 	fowners ovirt:ovirt /etc/ovirt-engine/pki/{,certs,requests,private}
 
 	diropts -o ovirt -g ovirt
