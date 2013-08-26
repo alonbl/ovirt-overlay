@@ -32,7 +32,10 @@ src_prepare() {
 }
 
 src_configure() {
-	python_foreach_impl run_in_build_dir default
+	conf() {
+		econf --with-local-version="${PF}"
+	}
+	python_foreach_impl run_in_build_dir conf
 
 	if use java; then
 		econf \
