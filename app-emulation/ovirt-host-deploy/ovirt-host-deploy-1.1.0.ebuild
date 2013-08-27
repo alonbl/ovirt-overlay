@@ -6,15 +6,14 @@ EAPI=5
 PYTHON_COMPAT=( python{2_6,2_7,3_1,3_2,3_3} )
 
 inherit python-r1 java-pkg-opt-2
-inherit git-2 autotools
 
 DESCRIPTION="oVirt Host Deploy"
 HOMEPAGE="http://www.ovirt.org"
-EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}.git"
+SRC_URI="http://resources.ovirt.org/releases/3.3/src/${P}.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="${PYTHON_DEPS}
@@ -27,7 +26,6 @@ DEPEND="${RDEPEND}
 	java? ( >=virtual/jdk-1.5 )"
 
 src_prepare() {
-	eautoreconf
 	python_copy_sources
 }
 

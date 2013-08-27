@@ -1,3 +1,9 @@
+*ovirt-host-deploy-1.1.0 (27 Aug 2013)
+
+  27 Aug 2013; Alon Bar-Lev <alonbl@redhat.com> +ovirt-host-deploy-1.1.0.ebuild,
+  ovirt-host-deploy-9999.ebuild:
+  Version bump
+
   26 Aug 2013; Alon Bar-Lev <alonbl@gentoo.org> ovirt-host-deploy-9999.ebuild:
   Add local version support
 
