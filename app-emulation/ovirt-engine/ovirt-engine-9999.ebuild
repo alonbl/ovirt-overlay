@@ -26,8 +26,8 @@ JBOSS_HOME="/usr/share/ovirt/jboss-as"
 JARS="
 	dev-java/jdbc-postgresql
 	system-jars? (
-		app-emulation/otopi[java]
-		app-emulation/ovirt-host-deploy[java]
+		>=app-emulation/otopi-1.1.0[java]
+		>=app-emulation/ovirt-host-deploy-1.1.0[java]
 		dev-java/aopalliance
 		dev-java/apache-sshd-bin
 		dev-java/commons-beanutils
@@ -57,10 +57,10 @@ DEPEND=">=virtual/jdk-1.7
 	app-arch/unzip
 	${JARS}"
 RDEPEND="${PYTHON_DEPS}
-	>=app-emulation/otopi-1.0.2
+	>=app-emulation/otopi-1.1.0
+	>=app-emulation/ovirt-host-deploy-1.1.0
 	>=dev-python/python-exec-0.3
 	>=virtual/jre-1.7
-	app-emulation/ovirt-host-deploy
 	app-emulation/ovirt-jboss-as-bin
 	dev-db/postgresql-base
 	dev-libs/libxml2[python]
