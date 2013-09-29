@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/dev-python/python-lzo/python-lzo-1.08.ebuild,v 1.3 2011/02/26 23:24:28 arfrever Exp $
 
@@ -18,5 +18,5 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND=""
+DEPEND="dev-libs/libnl:1.1"
 RDEPEND="${DEPEND}"
