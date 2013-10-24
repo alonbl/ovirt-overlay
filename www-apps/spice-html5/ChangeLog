@@ -1,0 +1,5 @@
+*spice-html5-0.1.1 (24 Oct 2013)
+
+  24 Oct 2013; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +spice-html5-0.1.1.ebuild:
+  Initial add
