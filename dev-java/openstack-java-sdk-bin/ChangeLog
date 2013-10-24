@@ -1,0 +1,5 @@
+*openstack-java-sdk-bin-3.0.1 (24 Oct 2013)
+
+  24 Oct 2013; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +openstack-java-sdk-bin-3.0.1.ebuild:
+  Initial add
