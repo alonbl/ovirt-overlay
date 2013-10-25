@@ -17,7 +17,7 @@ EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
-IUSE="+system-jars minimal +novnc"
+IUSE="+system-jars minimal quick"
 
 MAVEN_SLOT="3.0"
 MAVEN="mvn-${MAVEN_SLOT}"
@@ -40,6 +40,7 @@ JARS="
 		dev-java/commons-lang
 		dev-java/hibernate-validator-bin
 		dev-java/jaxb
+		dev-java/openstack-java-sdk-bin
 		dev-java/quartz-bin
 		dev-java/slf4j-api
 		dev-java/spring-framework-bin
@@ -48,7 +49,6 @@ JARS="
 		dev-java/validation-api
 		dev-java/xml-commons
 		dev-java/xmlrpc-client-bin
-		dev-java/xz-java
 	)
 	"
 
@@ -69,13 +69,12 @@ RDEPEND="${PYTHON_DEPS}
 	dev-python/m2crypto
 	dev-python/psycopg
 	dev-python/python-daemon
+	dev-python/websockify
 	net-dns/bind-tools
 	sys-libs/cracklib[python]
+	www-apps/novnc
+	www-apps/spice-html5
 	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
-	novnc? (
-		dev-python/websockify
-		www-misc/noVNC
-	)
 	${JARS}"
 
 pkg_setup() {
@@ -100,10 +99,13 @@ pkg_setup() {
 		LOCALSTATE_DIR=/var \
 		MAVENPOM_DIR=/tmp \
 		JAVA_DIR=/usr/share/${PN}/java \
+		PYTHON_SYS_DIR=${PYTHON_SITEDIR} \
 		PKG_USER=ovirt \
 		PKG_GROUP=ovirt \
 		EXTRA_BUILD_FLAGS=$(use minimal && echo "-Dgwt.userAgent=gecko1_8") \
 		BUILD_LOCALES=$(use minimal && echo 0 || echo 1) \
+		BUILD_GWT=$(use quick && echo 0 || echo 1) \
+		BUILD_UT=$(use quick && echo 0 || echo 1) \
 		DISPLAY_VERSION=${PVR} \
 		"
 }
@@ -162,11 +164,19 @@ commons-compress
 commons-configuration
 commons-httpclient commons-httpclient-3
 commons-jxpath
+glance-client openstack-java-sdk-bin:glance-client.jar
+glance-model openstack-java-sdk-bin:glance-model.jar
+keystone-client openstack-java-sdk-bin:keystone-client.jar
+keystone-model openstack-java-sdk-bin:keystone-model.jar
 mina-core apache-mina-bin-4
+openstack-client openstack-java-sdk-bin:openstack-client.jar
 otopi otopi otopi*
 ovirt-host-deploy ovirt-host-deploy ovirt-host-deploy*
 postgresql jdbc-postgresql
 quartz quartz-bin-4
+quantum-client openstack-java-sdk-bin:quantum-client.jar
+quantum-model openstack-java-sdk-bin:quantum-model.jar
+resteasy-connector openstack-java-sdk-bin:resteasy-connector.jar
 slf4j-api
 spring-aop spring-framework-bin-4:spring-aop.jar
 spring-asm spring-framework-bin-4:spring-core.jar spring-core
@@ -176,8 +186,8 @@ spring-core spring-framework-bin-4:spring-core.jar
 spring-expression spring-framework-bin-4:spring-expression.jar
 spring-instrument spring-framework-bin-4:spring-instrument.jar
 spring-jdbc spring-framework-bin-4:spring-jdbc.jar
-spring-tx spring-framework-bin-4:spring-tx.jar
 spring-ldap-core spring-ldap-bin-4:spring-ldap-core.jar
+spring-tx spring-framework-bin-4:spring-tx.jar
 sshd-core apache-sshd-bin-4
 ws-commons-util
 xmlrpc-client xmlrpc-client-bin-4
@@ -185,16 +195,6 @@ __EOF__
 		cd "${S}"
 		done
 	fi
-
-	# TODO:
-	# the following should move
-	# from make to spec
-	# for now just remove them
-	# postgres was installed at lib of ear
-	rm -fr \
-		"${ED}/etc/tmpfiles.d" \
-		"${ED}/etc/rc.d" \
-		"${ED}/lib/systemd"
 
 	fowners ovirt:ovirt /etc/ovirt-engine/pki/{,certs,requests,private}
 
@@ -221,15 +221,18 @@ __EOF__
 
 	newinitd "${FILESDIR}/ovirt-engine.init.d" "ovirt-engine"
 	newinitd "${FILESDIR}/ovirt-engine-notifier.init.d" "ovirt-engine-notifier"
-	use novnc && newinitd "${FILESDIR}/ovirt-websocket-proxy.init.d" "ovirt-websocket-proxy"
+	newinitd "${FILESDIR}/ovirt-websocket-proxy.init.d" "ovirt-websocket-proxy"
 	insinto /etc/ovirt-engine-setup.conf.d
 	newins "${FILESDIR}/gentoo-setup.conf" "01-gentoo.conf"
 	insinto /etc/ovirt-engine-setup.env.d
 	newins "${FILESDIR}/gentoo-setup.env" "01-gentoo.env"
+	exeinto /usr/share/ovirt-engine/bin
+	doexe "${FILESDIR}/java-home.local"
 
 	if use system-jars; then
 		WHITE_LIST="\
 bll.jar|\
+branding.jar|\
 common.jar|\
 compat.jar|\
 dal.jar|\

@@ -1,3 +1,7 @@
+  25 Oct 2013; Alon Bar-Lev <alonbl@redhat.com> +files/java-home.local,
+  metadata.xml, ovirt-engine-9999.ebuild:
+  sync with upstream
+
   27 Aug 2013; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
   Update otopi, ovirt-host-deploy dependencies
 
