@@ -1,3 +1,10 @@
+*ovirt-engine-3.3.1 (26 Nov 2013)
+
+  26 Nov 2013; Alon Bar-Lev <alonbl@gentoo.org> +ovirt-engine-3.3.1.ebuild,
+  files/ovirt-engine-notifier.init.d, files/ovirt-engine.init.d,
+  ovirt-engine-9999.ebuild:
+  ovirt-engine-3.3.1
+
   25 Oct 2013; Alon Bar-Lev <alonbl@redhat.com> +files/java-home.local,
   metadata.xml, ovirt-engine-9999.ebuild:
   sync with upstream

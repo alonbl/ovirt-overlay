@@ -7,16 +7,15 @@ PYTHON_COMPAT=( python2_7 )
 
 CHECKREQS_MEMORY="8G"
 
-inherit user java-pkg-2 git-2 python-r1 check-reqs
+inherit versionator user java-pkg-2 python-r1 check-reqs
 
 DESCRIPTION="oVirt Engine"
 HOMEPAGE="http://www.ovirt.org"
-#EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
-EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
+SRC_URI="http://resources.ovirt.org/releases/$(get_version_component_range 1-2)/src/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="+system-jars minimal quick"
 
 MAVEN_SLOT="3.0"
@@ -108,6 +107,12 @@ pkg_setup() {
 		BUILD_UT=$(use quick && echo 0 || echo 1) \
 		DISPLAY_VERSION=${PVR} \
 		"
+}
+
+src_unpack() {
+	mkdir "${P}"
+	cd "${P}"
+	unpack ${A}
 }
 
 src_compile() {

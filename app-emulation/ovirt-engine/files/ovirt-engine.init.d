@@ -12,6 +12,7 @@ start_stop_daemon_args="--user ovirt:ovirt"
 depend() {
 	use logger
 	need net
+	need postgresql
 }
 
 start_pre() {
