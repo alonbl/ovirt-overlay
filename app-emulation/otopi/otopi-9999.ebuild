@@ -45,6 +45,7 @@ src_configure() {
 	python_foreach_impl run_in_build_dir conf
 
 	if use java; then
+		python_export_best
 		export COMMONS_LOGGING_JAR="$(java-pkg_getjar commons-logging \
 				commons-logging.jar)"
 		export JUNIT_JAR="$(java-pkg_getjar --build-only junit-4 junit.jar)"
@@ -63,7 +64,6 @@ src_install() {
 	inst() {
 		emake install DESTDIR="${ED}" am__py_compile=true
 		python_optimize
-		python_optimize "${ED}/usr/share/otopi/plugins"
 	}
 	python_foreach_impl run_in_build_dir inst
 
