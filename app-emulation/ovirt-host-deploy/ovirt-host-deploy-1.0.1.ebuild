@@ -33,6 +33,7 @@ src_configure() {
 	python_foreach_impl run_in_build_dir default
 
 	if use java; then
+		python_export_best
 		econf \
 			$(use_enable java java-sdk)
 	fi

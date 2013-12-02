@@ -38,6 +38,7 @@ src_configure() {
 	python_foreach_impl run_in_build_dir conf
 
 	if use java; then
+		python_export_best
 		econf \
 			$(use_enable java java-sdk)
 	fi
@@ -53,7 +54,6 @@ src_install() {
 	inst() {
 		emake install DESTDIR="${ED}" am__py_compile=true
 		python_optimize
-		python_optimize "${ED}/usr/share/ovirt-host-deploy/plugins"
 	}
 	python_foreach_impl run_in_build_dir inst
 
