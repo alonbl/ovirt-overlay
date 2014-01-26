@@ -1,0 +1,7 @@
+*jasperreports-server-bin-5.5.0 (26 Jan 2014)
+
+  26 Jan 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +files/jasperreports-server-bin-5.5.0-additional-config.patch,
+  +files/jasperreports-server-bin-5.5.0-install_resources.patch,
+  +jasperreports-server-bin-5.5.0.ebuild, +metadata.xml:
+  initial import
