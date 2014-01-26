@@ -1,3 +1,7 @@
+  26 Jan 2014; Alon Bar-Lev <alonbl@redhat.com>
+  jasperreports-server-bin-5.5.0.ebuild:
+  remove bin suffix from target
+
 *jasperreports-server-bin-5.5.0 (26 Jan 2014)
 
   26 Jan 2014; Alon Bar-Lev <alonbl@redhat.com>

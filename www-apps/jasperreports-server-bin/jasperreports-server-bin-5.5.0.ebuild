@@ -33,6 +33,6 @@ src_compile() {
 }
 
 src_install() {
-	insinto "/usr/share/${PN}"
+	insinto "/usr/share/${PN//-bin}"
 	doins -r *
 }
