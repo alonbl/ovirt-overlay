@@ -25,6 +25,7 @@ S="${WORKDIR}/${MY_PN}-${PV}-bin"
 src_prepare() {
 	epatch "${FILESDIR}/${P}-additional-config.patch"
 	epatch "${FILESDIR}/${P}-install_resources.patch"
+	epatch "${FILESDIR}/${P}-write-own.patch"
 	find "${S}" -name '*.exe' -exec rm -f "{}" \;
 }
 

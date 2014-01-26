@@ -1,4 +1,9 @@
   26 Jan 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +files/jasperreports-server-bin-5.5.0-write-own.patch,
+  jasperreports-server-bin-5.5.0.ebuild:
+  do not write own files, prereq is using postgres only for now
+
+  26 Jan 2014; Alon Bar-Lev <alonbl@redhat.com>
   jasperreports-server-bin-5.5.0.ebuild:
   preserve filemod
 
