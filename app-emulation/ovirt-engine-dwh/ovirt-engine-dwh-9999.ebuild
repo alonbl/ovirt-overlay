@@ -31,6 +31,7 @@ DEPEND=">=virtual/jdk-1.7
 	${JARS}"
 RDEPEND="${PYTHON_DEPS}
 	>=virtual/jre-1.7
+	>=app-emulation/ovirt-engine-9999
 	app-emulation/ovirt-jboss-as-bin
 	${JARS}"
 
