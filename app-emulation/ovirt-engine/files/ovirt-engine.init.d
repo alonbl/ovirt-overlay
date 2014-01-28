@@ -1,5 +1,5 @@
 #!/sbin/runscript
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,4 +17,6 @@ depend() {
 
 start_pre() {
 	ulimit -n ${NOFILE:-65535}
+	mkdir -p /var/cache/ovirt-engine
+	chown ovirt:ovirt /var/cache/ovirt-engine
 }

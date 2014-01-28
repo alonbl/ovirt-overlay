@@ -1,3 +1,7 @@
+  28 Jan 2014; Alon Bar-Lev <alonbl@redhat.com> files/ovirt-engine.init.d,
+  ovirt-engine-3.3.2.ebuild, ovirt-engine-9999.ebuild:
+  Misc updates
+
 *ovirt-engine-3.3.2 (13 Jan 2014)
 
   13 Jan 2014; Alon Bar-Lev <alonbl@gentoo.org> +ovirt-engine-3.3.2.ebuild,

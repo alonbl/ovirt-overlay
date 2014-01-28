@@ -203,7 +203,6 @@ __EOF__
 	diropts -o ovirt -g ovirt
 	keepdir /var/log/ovirt-engine/{,host-deploy,setup,notifier,engine-manage-domains,dump}
 	keepdir /var/lib/ovirt-engine/{,deployments,content,setup,setup/answers}
-	keepdir /var/cache/ovirt-engine
 
 	#
 	# Force TLS/SSL for selected applications.

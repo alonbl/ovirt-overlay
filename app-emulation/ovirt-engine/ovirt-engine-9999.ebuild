@@ -12,7 +12,7 @@ inherit git-2
 
 DESCRIPTION="oVirt Engine"
 HOMEPAGE="http://www.ovirt.org"
-EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-engine"
+EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -26,8 +26,9 @@ JBOSS_HOME="/usr/share/ovirt/jboss-as"
 JARS="
 	dev-java/jdbc-postgresql
 	system-jars? (
-		>=app-emulation/otopi-1.1.0[java]
-		>=app-emulation/ovirt-host-deploy-1.1.0[java]
+		>=app-emulation/otopi-1.2.0[java]
+		>=app-emulation/ovirt-host-deploy-1.2.0[java]
+		>=dev-java/openstack-java-sdk-bin-3.0.2
 		dev-java/aopalliance
 		dev-java/apache-sshd-bin
 		dev-java/commons-beanutils
@@ -40,7 +41,6 @@ JARS="
 		dev-java/commons-lang
 		dev-java/hibernate-validator-bin
 		dev-java/jaxb
-		dev-java/openstack-java-sdk-bin
 		dev-java/quartz-bin
 		dev-java/slf4j-api
 		dev-java/spring-framework-bin
@@ -57,8 +57,8 @@ DEPEND=">=virtual/jdk-1.7
 	app-arch/unzip
 	${JARS}"
 RDEPEND="${PYTHON_DEPS}
-	>=app-emulation/otopi-1.1.0
-	>=app-emulation/ovirt-host-deploy-1.1.0
+	>=app-emulation/otopi-1.2.0
+	>=app-emulation/ovirt-host-deploy-1.2.0
 	>=virtual/jre-1.7
 	app-emulation/ovirt-jboss-as-bin
 	dev-db/postgresql-base
@@ -197,7 +197,6 @@ __EOF__
 	diropts -o ovirt -g ovirt
 	keepdir /var/log/ovirt-engine/{,host-deploy,setup,notifier,engine-manage-domains,dump}
 	keepdir /var/lib/ovirt-engine/{,deployments,content,setup,setup/answers}
-	keepdir /var/cache/ovirt-engine
 
 	#
 	# Force TLS/SSL for selected applications.
