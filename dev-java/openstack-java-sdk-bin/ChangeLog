@@ -1,3 +1,9 @@
+*openstack-java-sdk-bin-3.0.2 (28 Jan 2014)
+
+  28 Jan 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +openstack-java-sdk-bin-3.0.2.ebuild:
+  version bump
+
 *openstack-java-sdk-bin-3.0.1 (24 Oct 2013)
 
   24 Oct 2013; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
