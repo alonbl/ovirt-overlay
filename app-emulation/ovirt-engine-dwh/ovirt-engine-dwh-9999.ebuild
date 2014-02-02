@@ -41,7 +41,6 @@ pkg_setup() {
 
 	enewgroup ovirt
 	enewuser ovirt -1 "" "" ovirt
-	enewuser vdsm -1 "" "" kvm
 
 	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
 		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
@@ -134,5 +133,5 @@ pkg_postinst() {
 	fi
 
 	elog "To configure package:"
-	elog "    emerge --config =${CATEGORY}/ovirt-engine"
+	elog "    emerge --config ${CATEGORY}/ovirt-engine"
 }

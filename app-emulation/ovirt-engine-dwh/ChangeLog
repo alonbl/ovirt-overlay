@@ -1,3 +1,6 @@
+  02 Feb 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-dwh-9999.ebuild:
+  minor fixups
+
   28 Jan 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-dwh-9999.ebuild:
   Add ovirt-engine as dependency
 
