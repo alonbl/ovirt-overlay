@@ -1,3 +1,8 @@
+*ovirt-engine-3.3.3 (04 Feb 2014)
+
+  04 Feb 2014; Alon Bar-Lev <alonbl@redhat.com> +ovirt-engine-3.3.3.ebuild:
+  version bump
+
   28 Jan 2014; Alon Bar-Lev <alonbl@redhat.com> files/ovirt-engine.init.d,
   ovirt-engine-3.3.2.ebuild, ovirt-engine-9999.ebuild:
   Misc updates
