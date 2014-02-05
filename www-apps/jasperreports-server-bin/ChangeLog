@@ -1,4 +1,9 @@
   05 Feb 2014; Alon Bar-Lev <alonbl@redhat.com>
+  files/jasperreports-server-bin-5.5.0-ANT_OPTS.patch,
+  files/jasperreports-server-bin-5.5.0-java.io.tmpdir.patch:
+  sync patch levels
+
+  05 Feb 2014; Alon Bar-Lev <alonbl@redhat.com>
   +files/jasperreports-server-bin-5.5.0-ANT_OPTS.patch,
   +files/jasperreports-server-bin-5.5.0-java.io.tmpdir.patch,
   jasperreports-server-bin-5.5.0.ebuild:
