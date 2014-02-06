@@ -15,25 +15,23 @@ EGIT_REPO_URI="git://gerrit.ovirt.org/ovirt-dwh"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
-IUSE="+system-jars"
+IUSE=""
 
 MAVEN_SLOT="3.0"
 MAVEN="mvn-${MAVEN_SLOT}"
 JBOSS_HOME="/usr/share/ovirt/jboss-as"
 
-JARS="
-	dev-java/jdbc-postgresql
-	"
-
+COMMON_DEPEND="
+	dev-java/commons-collections
+	dev-java/dom4j"
 DEPEND=">=virtual/jdk-1.7
-	dev-java/maven-bin:${MAVEN_SLOT}
-	app-arch/unzip
-	${JARS}"
+	dev-java/ant
+	${COMMON_DEPEND}"
 RDEPEND="${PYTHON_DEPS}
 	>=virtual/jre-1.7
 	>=app-emulation/ovirt-engine-9999
-	app-emulation/ovirt-jboss-as-bin
-	${JARS}"
+	dev-java/jdbc-postgresql
+	${COMMON_DEPEND}"
 
 pkg_setup() {
 	java-pkg-2_pkg_setup
@@ -42,10 +40,6 @@ pkg_setup() {
 	enewgroup ovirt
 	enewuser ovirt -1 "" "" ovirt
 
-	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
-		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
-
-	# TODO: we should be able to disable pom install
 	MAKE_COMMON_ARGS=" \
 		MVN=mvn-${MAVEN_SLOT} \
 		PYTHON=${PYTHON} \
@@ -53,7 +47,6 @@ pkg_setup() {
 		PREFIX=/usr \
 		SYSCONF_DIR=/etc \
 		LOCALSTATE_DIR=/var \
-		MAVENPOM_DIR=/tmp \
 		JAVA_DIR=/usr/share/${PN}/java \
 		PYTHON_SYS_DIR=${PYTHON_SITEDIR} \
 		PKG_USER=ovirt \
@@ -69,33 +62,6 @@ src_compile() {
 src_install() {
 	emake ${MAKE_COMMON_ARGS} DESTDIR="${ED}" install
 
-	# remove the pom files
-	rm -fr "${ED}/tmp"
-
-	if use system-jars; then
-		find "${ED}/usr/share/ovirt-engine-dwh/modules" -name module.xml | \
-		while read module; do
-			cd "$(dirname "${module}")"
-			while read current package name; do
-				[ -z "${package}" ] && package="${current}"
-				if grep -q "<resource-root path=\"${current}" module.xml; then
-					rm -f ${current}*.jar
-					java-pkg_jar-from ${package//:/ }
-					if ! [ -e "${current}.jar" ]; then
-						if [ -n "${name}" ]; then
-							ln -s ${name}.jar "${current}.jar"
-						elif [ "${current}" != "${package}" ]; then
-							ln -s "${package}.jar" "${current}.jar"
-						fi
-					fi
-				fi
-			done << __EOF__
-postgresql jdbc-postgresql
-__EOF__
-		cd "${S}"
-		done
-	fi
-
 	diropts -o ovirt -g ovirt
 	keepdir /var/log/ovirt-engine-dwh
 	keepdir /var/lib/ovirt-engine-dwh
@@ -110,28 +76,9 @@ __EOF__
 	python_optimize "${ED}/usr/share/ovirt-engine"
 
 	newinitd "${FILESDIR}/ovirt-engine-dwhd.init.d" "ovirt-engine-dwhd"
-
-	if use system-jars; then
-		WHITE_LIST="\
-advancedPersistentLookupLib.jar|\
-etltermination.jar|
-historyETL.jar|
-routines.jar\
-"
-		BLACK_LIST_JARS="$(
-			find "${ED}" -name '*.jar' -type f | \
-			xargs -n1 basename -- | sort | uniq | \
-			grep -v -E "${WHITE_LIST}" \
-		)"
-	fi
 }
 
 pkg_postinst() {
-	if use system-jars && [ -n "${BLACK_LIST_JARS}" ]; then
-		ewarn "system-jars was selected, however, these componets still binary:"
-		ewarn "$(echo "${BLACK_LIST_JARS}" | sed 's/^/\t/')"
-	fi
-
 	elog "To configure package:"
 	elog "    emerge --config ${CATEGORY}/ovirt-engine"
 }

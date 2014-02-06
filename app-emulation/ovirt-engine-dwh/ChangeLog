@@ -1,3 +1,7 @@
+  06 Feb 2014; Alon Bar-Lev <alonbl@redhat.com> metadata.xml,
+  ovirt-engine-dwh-9999.ebuild:
+  switch from maven to ant per upstream
+
   02 Feb 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-dwh-9999.ebuild:
   minor fixups
 
