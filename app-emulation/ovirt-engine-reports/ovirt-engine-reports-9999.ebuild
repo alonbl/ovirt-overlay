@@ -17,10 +17,9 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-MAVEN_SLOT="3.0"
-MAVEN="mvn-${MAVEN_SLOT}"
-
-DEPEND="dev-java/maven-bin:${MAVEN_SLOT}"
+DEPEND=">=virtual/jdk-1.7
+	dev-java/ant
+	www-apps/jasperreports-server-bin"
 RDEPEND="${PYTHON_DEPS}
 	>=app-emulation/ovirt-engine-9999
 	>=virtual/jre-1.7
@@ -36,19 +35,14 @@ pkg_setup() {
 	enewgroup ovirt
 	enewuser ovirt -1 "" "" ovirt
 
-	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
-		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
-
 	# TODO: we should be able to disable pom install
 	MAKE_COMMON_ARGS=" \
-		MVN=mvn-${MAVEN_SLOT} \
 		PYTHON=${PYTHON} \
 		PYTHON_DIR=${PYTHON_SITEDIR} \
 		PREFIX=/usr \
 		SYSCONF_DIR=/etc \
 		LOCALSTATE_DIR=/var \
-		MAVENPOM_DIR=/tmp \
-		JAVA_DIR=/usr/share/${PN}/java \
+		PKG_JAVA_DIR=/usr/share/${PN}/lib \
 		PYTHON_SYS_DIR=${PYTHON_SITEDIR} \
 		PKG_USER=ovirt \
 		PKG_GROUP=ovirt \
@@ -62,9 +56,6 @@ src_compile() {
 
 src_install() {
 	emake ${MAKE_COMMON_ARGS} DESTDIR="${ED}" install
-
-	# remove the pom files
-	rm -fr "${ED}/tmp"
 
 	diropts -o ovirt -g ovirt
 	keepdir /var/log/ovirt-engine-reports
