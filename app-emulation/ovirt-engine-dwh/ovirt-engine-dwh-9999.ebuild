@@ -17,10 +17,6 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-MAVEN_SLOT="3.0"
-MAVEN="mvn-${MAVEN_SLOT}"
-JBOSS_HOME="/usr/share/ovirt/jboss-as"
-
 COMMON_DEPEND="
 	dev-java/commons-collections
 	dev-java/dom4j"
@@ -41,7 +37,6 @@ pkg_setup() {
 	enewuser ovirt -1 "" "" ovirt
 
 	MAKE_COMMON_ARGS=" \
-		MVN=mvn-${MAVEN_SLOT} \
 		PYTHON=${PYTHON} \
 		PYTHON_DIR=${PYTHON_SITEDIR} \
 		PREFIX=/usr \
