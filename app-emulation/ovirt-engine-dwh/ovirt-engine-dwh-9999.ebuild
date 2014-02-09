@@ -42,7 +42,6 @@ pkg_setup() {
 		PREFIX=/usr \
 		SYSCONF_DIR=/etc \
 		LOCALSTATE_DIR=/var \
-		JAVA_DIR=/usr/share/${PN}/java \
 		PYTHON_SYS_DIR=${PYTHON_SITEDIR} \
 		PKG_USER=ovirt \
 		PKG_GROUP=ovirt \

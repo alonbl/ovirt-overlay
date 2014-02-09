@@ -1,4 +1,7 @@
   09 Feb 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-dwh-9999.ebuild:
+  JAVA_DIR is not used
+
+  09 Feb 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-dwh-9999.ebuild:
   remove maven leftovers
 
   06 Feb 2014; Alon Bar-Lev <alonbl@redhat.com> metadata.xml,
