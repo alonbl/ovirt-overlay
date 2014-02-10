@@ -36,6 +36,17 @@ src_compile() {
 }
 
 src_install() {
-	dodir "/usr/share/${PN//-bin}"
-	cp -r * "${ED}/usr/share/${PN//-bin}"
+	local dir="/usr/share/${PN//-bin}"
+	dodir "${dir}"
+	# cannot use doins as timestamp
+	# must preserve, these guys alter
+	# their environment
+	# ant ignore if timestamp is the same
+	cp -R * "${ED}${dir}"
+	find "${ED}${dir}" -type d -exec chmod 0755 {} +
+	find "${ED}${dir}" -type f -exec chmod 0644 {} +
+	chmod a+x "${ED}${dir}/apache-ant/bin/ant"
+	chmod a+x "${ED}${dir}/buildomatic/js-ant"
+	chmod a+x "${ED}${dir}/buildomatic"/*.sh
+	chmod a+x "${ED}${dir}/buildomatic/bin"/*.sh
 }
