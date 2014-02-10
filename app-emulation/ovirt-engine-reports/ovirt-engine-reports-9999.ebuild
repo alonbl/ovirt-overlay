@@ -23,6 +23,7 @@ DEPEND=">=virtual/jdk-1.7
 RDEPEND="${PYTHON_DEPS}
 	>=app-emulation/ovirt-engine-9999
 	>=virtual/jre-1.7
+	sys-devel/patch
 	dev-libs/libxml2[python]
 	sys-libs/cracklib[python]
 	www-apps/jasperreports-server-bin
