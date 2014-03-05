@@ -1,3 +1,7 @@
+  05 Mar 2014; Alon Bar-Lev <alonbl@redhat.com>
+  ovirt-engine-reports-9999.ebuild:
+  Depend on 3.4 branch
+
   10 Feb 2014; Alon Bar-Lev <alonbl@redhat.com>
   ovirt-engine-reports-9999.ebuild:
   add patch dependency
