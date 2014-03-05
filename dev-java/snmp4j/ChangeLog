@@ -1,0 +1,5 @@
+*snmp4j-2.2.5 (05 Mar 2014)
+
+  05 Mar 2014; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +snmp4j-2.2.5.ebuild:
+  Initial import
