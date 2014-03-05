@@ -13,6 +13,7 @@ inherit git-2
 DESCRIPTION="oVirt Engine"
 HOMEPAGE="http://www.ovirt.org"
 EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}"
+EGIT_BRANCH="ovirt-engine-3.4"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -230,13 +231,12 @@ __EOF__
 
 	if use system-jars; then
 		WHITE_LIST="\
-aaa.jar|\
+authentication.jar|\
 bll.jar|\
 branding.jar|\
 common.jar|\
 compat.jar|\
 dal.jar|\
-extension-manager.jar|\
 frontend.jar|\
 gwt-extension.jar|\
 gwt-servlet.jar|\
