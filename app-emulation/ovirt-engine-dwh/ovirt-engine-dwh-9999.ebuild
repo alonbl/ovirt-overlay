@@ -25,7 +25,7 @@ DEPEND=">=virtual/jdk-1.7
 	${COMMON_DEPEND}"
 RDEPEND="${PYTHON_DEPS}
 	>=virtual/jre-1.7
-	>=app-emulation/ovirt-engine-9999
+	>=app-emulation/ovirt-engine-3.4.9999
 	dev-java/jdbc-postgresql
 	${COMMON_DEPEND}"
 
