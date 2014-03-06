@@ -61,6 +61,7 @@ RDEPEND="${PYTHON_DEPS}
 	>=app-emulation/ovirt-host-deploy-1.1.0
 	>=virtual/jre-1.7
 	app-emulation/ovirt-jboss-as-bin
+	app-misc/mime-types
 	dev-db/postgresql-base
 	dev-lang/python-exec
 	dev-libs/libxml2[python]
