@@ -1,0 +1,11 @@
+--- snmp4j-2.2.5/build.xml.org	2014-03-07 13:20:46.060950609 +0200
++++ snmp4j-2.2.5/build.xml	2014-03-07 13:20:56.759997310 +0200
+@@ -15,7 +15,7 @@
+   </path>
+   <target depends="init" name="javacompile">
+     <javac classpathref="project.class.path" debug="on" deprecation="false"
+-           destdir="${dest}" nowarn="true" source="1.6" target="1.6">
++           destdir="${dest}" nowarn="true" source="1.6" target="1.6" encoding="utf8">
+       <src path="${src}"/>
+     </javac>
+   </target>

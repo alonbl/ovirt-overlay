@@ -20,6 +20,7 @@ RDEPEND=">=virtual/jdk-1.7
 DEPEND="${RDEPEND}"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-build.patch"
 	rm -rf dist/
 	mkdir lib
 	java-pkg_jar-from --into lib log4j log4j.jar log4j-1.2.14.jar
