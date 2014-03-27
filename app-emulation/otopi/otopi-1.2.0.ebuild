@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,7 +9,7 @@ inherit python-r1 java-pkg-opt-2
 
 DESCRIPTION="oVirt Task Oriented Pluggable Installer/Implementation"
 HOMEPAGE="http://www.ovirt.org"
-SRC_URI="http://resources.ovirt.org/releases/3.2/src/${P}.tar.gz"
+SRC_URI="http://resources.ovirt.org/pub/src/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -37,7 +37,10 @@ src_prepare() {
 }
 
 src_configure() {
-	python_foreach_impl run_in_build_dir default
+	conf() {
+		econf --with-local-version="${PF}"
+	}
+	python_foreach_impl run_in_build_dir conf
 
 	if use java; then
 		python_export_best
@@ -59,13 +62,12 @@ src_install() {
 	inst() {
 		emake install DESTDIR="${ED}" am__py_compile=true
 		python_optimize
-		python_optimize "${ED}/usr/share/otopi/plugins"
 	}
 	python_foreach_impl run_in_build_dir inst
 
 	if use java; then
 		java-pkg_register-dependency commons-logging
-		java-pkg_dojar target/${PN}*.jar
+		java-pkg_newjar target/${PN}*.jar ${PN}.jar
 	fi
 	dodoc README*
 }
