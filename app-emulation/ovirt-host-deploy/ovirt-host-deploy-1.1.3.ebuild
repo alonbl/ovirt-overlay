@@ -9,7 +9,7 @@ inherit python-r1 java-pkg-opt-2
 
 DESCRIPTION="oVirt Host Deploy"
 HOMEPAGE="http://www.ovirt.org"
-SRC_URI="http://resources.ovirt.org/releases/3.3/src/${P}.tar.gz"
+SRC_URI="http://resources.ovirt.org/pub/src/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,7 +9,7 @@ inherit python-r1 java-pkg-opt-2
 
 DESCRIPTION="oVirt Host Deploy"
 HOMEPAGE="http://www.ovirt.org"
-SRC_URI="http://resources.ovirt.org/releases/3.3/src/${P}.tar.gz"
+SRC_URI="http://resources.ovirt.org/pub/src/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -52,7 +52,6 @@ src_install() {
 	inst() {
 		emake install DESTDIR="${ED}" am__py_compile=true
 		python_optimize
-		python_optimize "${ED}/usr/share/ovirt-host-deploy/plugins"
 	}
 	python_foreach_impl run_in_build_dir inst
 
