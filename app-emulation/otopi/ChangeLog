@@ -1,3 +1,6 @@
+  27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com> otopi-9999.ebuild:
+  Fix copyright
+
 *otopi-1.2.0 (27 Mar 2014)
 
   27 Mar 2014; Alon Bar-Lev <alonbl@gentoo.org> +otopi-1.2.0.ebuild,
