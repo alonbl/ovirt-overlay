@@ -1,3 +1,10 @@
+*ovirt-log-collector-3.4.1 (27 Mar 2014)
+
+  27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +ovirt-log-collector-3.4.1.ebuild, ovirt-log-collector-3.2.1.ebuild,
+  ovirt-log-collector-9999.ebuild:
+  Version bump
+
   18 Apr 2013; Alon Bar-Lev <alonbl@redhat.com>
   ovirt-log-collector-3.2.1.ebuild, ovirt-log-collector-9999.ebuild:
   move gettext to DEPEND
