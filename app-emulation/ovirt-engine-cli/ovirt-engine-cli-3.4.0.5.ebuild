@@ -18,7 +18,7 @@ IUSE=""
 
 DEPEND="${PYTHON_DEPS}"
 RDEPEND="${DEPEND}
-		>=app-emulation/ovirt-engine-sdk-python-3.2.0.3
+		>=app-emulation/ovirt-engine-sdk-python-3.4
 		dev-python/kitchen
 		dev-python/pexpect
 		dev-python/ply"

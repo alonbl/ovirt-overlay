@@ -1,3 +1,10 @@
+*ovirt-engine-cli-3.4.0.5 (27 Mar 2014)
+
+  27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +ovirt-engine-cli-3.4.0.5.ebuild, ovirt-engine-cli-3.2.0.7.ebuild,
+  ovirt-engine-cli-9999.ebuild:
+  Version bump + cleanups
+
   03 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> metadata.xml,
   ovirt-engine-cli-3.2.0.7.ebuild, ovirt-engine-cli-9999.ebuild:
   fixups
