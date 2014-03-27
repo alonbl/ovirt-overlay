@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,11 +7,11 @@ PYTHON_COMPAT=( python2_7 )
 
 CHECKREQS_MEMORY="8G"
 
-inherit versionator user java-pkg-2 python-r1 check-reqs
+inherit user java-pkg-2 python-r1 check-reqs
 
 DESCRIPTION="oVirt Engine"
 HOMEPAGE="http://www.ovirt.org"
-SRC_URI="http://resources.ovirt.org/releases/$(get_version_component_range 1-2)/src/${P}.tar.gz"
+SRC_URI="http://resources.ovirt.org/pub/src/${PN}/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -25,8 +25,9 @@ JBOSS_HOME="/usr/share/ovirt/jboss-as"
 JARS="
 	dev-java/jdbc-postgresql
 	system-jars? (
-		>=app-emulation/otopi-1.1.0[java]
-		>=app-emulation/ovirt-host-deploy-1.1.0[java]
+		>=app-emulation/otopi-1.2.0[java]
+		>=app-emulation/ovirt-host-deploy-1.2.0[java]
+		>=dev-java/openstack-java-sdk-bin-3.0.2
 		dev-java/aopalliance
 		dev-java/apache-sshd-bin
 		dev-java/commons-beanutils
@@ -39,9 +40,9 @@ JARS="
 		dev-java/commons-lang
 		dev-java/hibernate-validator-bin
 		dev-java/jaxb
-		dev-java/openstack-java-sdk-bin
 		dev-java/quartz-bin
 		dev-java/slf4j-api
+		dev-java/snmp4j
 		dev-java/spring-framework-bin
 		dev-java/spring-ldap-bin
 		dev-java/stax
@@ -56,8 +57,8 @@ DEPEND=">=virtual/jdk-1.7
 	app-arch/unzip
 	${JARS}"
 RDEPEND="${PYTHON_DEPS}
-	>=app-emulation/otopi-1.1.0
-	>=app-emulation/ovirt-host-deploy-1.1.0
+	>=app-emulation/otopi-1.2.0
+	>=app-emulation/ovirt-host-deploy-1.2.0
 	>=virtual/jre-1.7
 	app-emulation/ovirt-jboss-as-bin
 	app-misc/mime-types
@@ -76,6 +77,14 @@ RDEPEND="${PYTHON_DEPS}
 	www-apps/spice-html5
 	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
 	${JARS}"
+
+S="${WORKDIR}"
+
+pkg_pretend() {
+	if has network-sandbox ${FEATURES} ; then
+		die "Please disable network-sandbox from FEATURES"
+	fi
+}
 
 pkg_setup() {
 	java-pkg-2_pkg_setup
@@ -110,25 +119,12 @@ pkg_setup() {
 		"
 }
 
-src_unpack() {
-	mkdir "${P}"
-	cd "${P}"
-	unpack ${A}
-}
-
 src_compile() {
-	emake \
-		${MAKE_COMMON_ARGS} \
-		all \
-		|| die
+	emake ${MAKE_COMMON_ARGS} all
 }
 
 src_install() {
-	emake \
-		${MAKE_COMMON_ARGS} \
-		DESTDIR="${ED}" \
-		install \
-		|| die
+	emake ${MAKE_COMMON_ARGS} DESTDIR="${ED}" install
 
 	# remove the pom files
 	rm -fr "${ED}/tmp"
@@ -181,11 +177,12 @@ openstack-client openstack-java-sdk-bin:openstack-client.jar
 otopi otopi otopi*
 ovirt-host-deploy ovirt-host-deploy ovirt-host-deploy*
 postgresql jdbc-postgresql
-quartz quartz-bin-4
 quantum-client openstack-java-sdk-bin:quantum-client.jar
 quantum-model openstack-java-sdk-bin:quantum-model.jar
+quartz quartz-bin-4
 resteasy-connector openstack-java-sdk-bin:resteasy-connector.jar
 slf4j-api
+snmp4j
 spring-aop spring-framework-bin-4:spring-aop.jar
 spring-asm spring-framework-bin-4:spring-core.jar spring-core
 spring-beans spring-framework-bin-4:spring-beans.jar
@@ -210,7 +207,6 @@ __EOF__
 	diropts -o ovirt -g ovirt
 	keepdir /var/log/ovirt-engine/{,host-deploy,setup,notifier,engine-manage-domains,dump}
 	keepdir /var/lib/ovirt-engine/{,deployments,content,setup,setup/answers}
-	keepdir /var/cache/ovirt-engine
 
 	#
 	# Force TLS/SSL for selected applications.
@@ -242,6 +238,7 @@ __EOF__
 
 	if use system-jars; then
 		WHITE_LIST="\
+authentication.jar|\
 bll.jar|\
 branding.jar|\
 common.jar|\

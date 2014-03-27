@@ -80,6 +80,12 @@ RDEPEND="${PYTHON_DEPS}
 	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
 	${JARS}"
 
+pkg_pretend() {
+	if has network-sandbox ${FEATURES} ; then
+		die "Please disable network-sandbox from FEATURES"
+	fi
+}
+
 pkg_setup() {
 	java-pkg-2_pkg_setup
 	python_export_best EPYTHON PYTHON PYTHON_SITEDIR
