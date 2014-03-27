@@ -1,3 +1,8 @@
+*ovirt-engine-dwh-3.4.0 (27 Mar 2014)
+
+  27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com> +ovirt-engine-dwh-3.4.0.ebuild:
+  Version bump
+
   05 Mar 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-dwh-9999.ebuild:
   Depend on 3.4 branch
 
