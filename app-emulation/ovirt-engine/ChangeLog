@@ -1,3 +1,9 @@
+  08 Apr 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-3.3.4.ebuild,
+  ovirt-engine-3.4.0.ebuild, ovirt-engine-3.4.9999.ebuild,
+  ovirt-engine-9999.ebuild:
+  Remove vdsm user as we do not support nfs for now, not required, and kvm does
+  not exist by default
+
   03 Apr 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-9999.ebuild:
   Add dev-python/numpy dependency
 

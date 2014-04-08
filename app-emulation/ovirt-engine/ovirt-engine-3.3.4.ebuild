@@ -90,7 +90,7 @@ pkg_setup() {
 
 	enewgroup ovirt
 	enewuser ovirt -1 "" "" ovirt
-	enewuser vdsm -1 "" "" kvm
+	#enewuser vdsm -1 "" "" kvm
 
 	export MAVEN_OPTS="-Djava.io.tmpdir=${T} \
 		-Dmaven.repo.local=$(echo ~portage)/${PN}-maven-repository"
