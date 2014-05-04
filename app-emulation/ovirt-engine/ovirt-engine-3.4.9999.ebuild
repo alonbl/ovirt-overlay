@@ -29,7 +29,7 @@ JARS="
 	system-jars? (
 		>=app-emulation/otopi-1.2.0[java]
 		>=app-emulation/ovirt-host-deploy-1.2.0[java]
-		>=dev-java/openstack-java-sdk-bin-3.0.2
+		>=dev-java/openstack-java-sdk-bin-3.0.4
 		dev-java/aopalliance
 		dev-java/apache-sshd-bin
 		dev-java/commons-beanutils

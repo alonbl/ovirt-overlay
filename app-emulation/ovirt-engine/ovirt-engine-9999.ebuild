@@ -28,7 +28,7 @@ JARS="
 	system-jars? (
 		>=app-emulation/otopi-1.2.0[java]
 		>=app-emulation/ovirt-host-deploy-1.2.0[java]
-		>=dev-java/openstack-java-sdk-bin-3.0.2
+		>=dev-java/openstack-java-sdk-bin-3.0.4
 		dev-java/aopalliance
 		dev-java/apache-sshd-bin
 		dev-java/commons-beanutils
@@ -236,19 +236,23 @@ __EOF__
 	exeinto /usr/share/ovirt-engine/bin
 	doexe "${FILESDIR}/java-home.local"
 
+	java-pkg_dojar "${ED}/usr/share/ovirt-engine/modules/org/ovirt/engine/api/ovirt-engine-extensions-api/main/ovirt-engine-extensions-api.jar"
+
 	if use system-jars; then
 		WHITE_LIST="\
 aaa.jar|\
 bll.jar|\
 branding.jar|\
+builtin.jar|\
 common.jar|\
 compat.jar|\
 dal.jar|\
-extension-manager.jar|\
+extensions-manager.jar|\
 frontend.jar|\
 gwt-extension.jar|\
 gwt-servlet.jar|\
 interface-common-jaxrs.jar|\
+ovirt-engine-extensions-api.jar|\
 restapi-definition.jar|\
 restapi-jaxrs.jar|\
 restapi-types.jar|\
@@ -256,6 +260,7 @@ scheduler.jar|\
 searchbackend.jar|\
 tools.jar|\
 utils.jar|\
+uutils.jar|\
 vdsbroker.jar\
 "
 		BLACK_LIST_JARS="$(
