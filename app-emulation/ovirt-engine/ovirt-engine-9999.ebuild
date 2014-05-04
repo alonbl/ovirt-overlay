@@ -17,7 +17,7 @@ EGIT_REPO_URI="git://gerrit.ovirt.org/${PN}"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS=""
-IUSE="+system-jars minimal quick"
+IUSE="javadoc minimal quick +system-jars"
 
 MAVEN_SLOT="3.0"
 MAVEN="mvn-${MAVEN_SLOT}"
@@ -104,6 +104,7 @@ pkg_setup() {
 		PYTHON_DIR=${PYTHON_SITEDIR} \
 		PREFIX=/usr \
 		SYSCONF_DIR=/etc \
+		PKG_DOC_DIR=/usr/share/doc/${PF} \
 		PKG_PKI_DIR=/etc/ovirt-engine/pki \
 		LOCALSTATE_DIR=/var \
 		MAVENPOM_DIR=/tmp \
@@ -237,6 +238,10 @@ __EOF__
 	doexe "${FILESDIR}/java-home.local"
 
 	java-pkg_dojar "${ED}/usr/share/ovirt-engine/modules/org/ovirt/engine/api/ovirt-engine-extensions-api/main/ovirt-engine-extensions-api.jar"
+
+	if ! use javadoc; then
+		rm -fr "${ED}/usr/share/doc/${PF}/ovirt-engine-extensions-api"
+	fi
 
 	if use system-jars; then
 		WHITE_LIST="\

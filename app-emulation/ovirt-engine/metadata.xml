@@ -8,5 +8,8 @@
 		<flag name='quick'>
 			Build quick unusable.
 		</flag>
+		<flag name='javadoc'>
+			Install javadocs
+		</flag>
 	</use>
 </pkgmetadata>

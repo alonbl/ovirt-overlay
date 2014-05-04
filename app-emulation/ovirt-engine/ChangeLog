@@ -1,3 +1,7 @@
+  04 May 2014; Alon Bar-Lev <alonbl@redhat.com> metadata.xml,
+  ovirt-engine-9999.ebuild:
+  Add javadoc USE
+
   04 May 2014; Alon Bar-Lev <alonbl@redhat.com> ovirt-engine-3.4.9999.ebuild,
   ovirt-engine-9999.ebuild:
   bump openstack sdk and sync master
