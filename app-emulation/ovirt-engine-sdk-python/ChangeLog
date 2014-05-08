@@ -1,3 +1,9 @@
+*ovirt-engine-sdk-python-3.4.1.1 (08 May 2014)
+
+  08 May 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +ovirt-engine-sdk-python-3.4.1.1.ebuild:
+  Version bump
+
   27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com>
   ovirt-engine-sdk-python-3.4.0.6.ebuild, ovirt-engine-sdk-python-9999.ebuild:
   Version bump + rename
