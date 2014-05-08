@@ -1,3 +1,9 @@
+*ovirt-image-uploader-3.4.1 (08 May 2014)
+
+  08 May 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +ovirt-image-uploader-3.4.1.ebuild:
+  Version bump
+
 *ovirt-image-uploader-3.4.0 (27 Mar 2014)
 
   27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com>
