@@ -1,3 +1,8 @@
+*ovirt-host-deploy-1.2.1 (08 May 2014)
+
+  08 May 2014; Alon Bar-Lev <alonbl@redhat.com> +ovirt-host-deploy-1.2.1.ebuild:
+  Version bump
+
 *ovirt-host-deploy-1.2.0 (27 Mar 2014)
 
   27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com> +ovirt-host-deploy-1.2.0.ebuild,
