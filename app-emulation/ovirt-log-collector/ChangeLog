@@ -1,3 +1,9 @@
+*ovirt-log-collector-3.4.2 (08 May 2014)
+
+  08 May 2014; Alon Bar-Lev <alonbl@redhat.com>
+  +ovirt-log-collector-3.4.2.ebuild:
+  Version bump
+
 *ovirt-log-collector-3.4.1 (27 Mar 2014)
 
   27 Mar 2014; Alon Bar-Lev <alonbl@redhat.com>
