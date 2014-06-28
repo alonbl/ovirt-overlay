@@ -1,0 +1,6 @@
+*unboundid-ldapsdk-2.3.7_pre530 (28 Jun 2014)
+*unboundid-ldapsdk-9999 (28 Jun 2014)
+
+  28 Jun 2014; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +unboundid-ldapsdk-2.3.7_pre530.ebuild, +unboundid-ldapsdk-9999.ebuild:
+  Initial import
