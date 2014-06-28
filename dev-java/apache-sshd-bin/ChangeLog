@@ -1,3 +1,8 @@
+*apache-sshd-bin-0.11.0 (28 Jun 2014)
+
+  28 Jun 2014; Alon Bar-Lev <alonbl@redhat.com> +apache-sshd-bin-0.11.0.ebuild:
+  Version bump
+
 *apache-sshd-bin-0.8.0 (06 Apr 2013)
 
   06 Apr 2013; Alon Bar-Lev <alonbl@redhat.com> +apache-sshd-bin-0.8.0.ebuild,
