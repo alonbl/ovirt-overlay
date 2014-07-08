@@ -1,0 +1,5 @@
+*patternfly-1.0.4 (08 Jul 2014)
+
+  08 Jul 2014; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +patternfly-1.0.4.ebuild:
+  Initial import
