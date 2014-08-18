@@ -76,6 +76,7 @@ RDEPEND="${PYTHON_DEPS}
 	sys-libs/cracklib[python]
 	dev-python/numpy
 	www-apps/novnc
+	www-apps/patternfly:1
 	www-apps/spice-html5
 	www-servers/apache[apache2_modules_headers,apache2_modules_proxy_ajp,ssl]
 	${JARS}"
