@@ -1,3 +1,7 @@
+  24 Nov 2014; Alon Bar-Lev <alonbl@redhat.com> otopi-1.1.4.ebuild,
+  otopi-1.2.0.ebuild, otopi-1.2.1.ebuild, otopi-9999.ebuild:
+  python-3.4
+
 *otopi-1.2.1 (08 May 2014)
 
   08 May 2014; Alon Bar-Lev <alonbl@redhat.com> +otopi-1.2.1.ebuild:
