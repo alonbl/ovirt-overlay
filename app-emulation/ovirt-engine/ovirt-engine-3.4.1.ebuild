@@ -63,7 +63,7 @@ RDEPEND="${PYTHON_DEPS}
 	>=virtual/jre-1.7
 	app-emulation/ovirt-jboss-as-bin
 	app-misc/mime-types
-	dev-db/postgresql-base
+	dev-db/postgresql
 	dev-lang/python-exec
 	dev-libs/libxml2[python]
 	dev-libs/openssl
