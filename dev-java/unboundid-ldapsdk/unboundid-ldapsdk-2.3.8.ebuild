@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,13 +15,13 @@ inherit subversion
 
 DESCRIPTION="UnboundID LDAP SDK for Java"
 HOMEPAGE="https://www.unboundid.com/products/ldap-sdk/"
-ESVN_REPO_URI="http://svn.code.sf.net/p/ldap-sdk/code/trunk"
+ESVN_REPO_URI="http://svn.code.sf.net/p/ldap-sdk/code/tags/2.3.8"
 LICENSE="|| ( GPL-2 LGPL-2.1+ UnboundID-LDAPSDK )"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE=""
 
-RDEPEND=">=virtual/jdk-1.5"
+RDEPEND=">=virtual/jdk-1.5:*"
 DEPEND="${RDEPEND}"
 
 src_prepare() {
