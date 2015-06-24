@@ -24,6 +24,12 @@ RDEPEND=">=virtual/jre-1.7"
 
 S="${WORKDIR}/${MY_PN}-$(get_version_component_range 1-2)"
 
+pkg_nofetch() {
+	elog "Please download the source archive \"${MY_P}.zip\" from:"
+	elog "http://www.jboss.org/products/eap/download/"
+	elog "Then put the file in ${DISTDIR}"
+}
+
 #pkg_setup() {
 #	enewgroup jboss
 #	enewuser jboss -1 "" "" jboss
