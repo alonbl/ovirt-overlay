@@ -1,0 +1,5 @@
+*ovirt-setup-lib-9999 (24 Nov 2015)
+
+  24 Nov 2015; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +ovirt-setup-lib-9999.ebuild:
+  app-emulation/ovirt-setup-lib: initial add
