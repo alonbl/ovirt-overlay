@@ -1,0 +1,5 @@
+*ovirt-wildfly-bin-9.0.2 (24 Nov 2015)
+
+  24 Nov 2015; Alon Bar-Lev <alonbl@redhat.com> +metadata.xml,
+  +ovirt-wildfly-bin-9.0.2.ebuild:
+  app-emulation/ovirt-wildfly-bin: initial import
